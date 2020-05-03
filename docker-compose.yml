@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+  java:
+    container_name: openjdk
+    image: openjdk:alpine
+    depends_on:
+    - db
+    volumes:
+     - ./java:/java
+    working_dir: /java
+    command: java -version
+    depends_on:
+     - db
+
+  web:
+    container_name: nginx
+    image: nginx:alpine
+    volumes:
+     - ./web/:/usr/share/nginx/html
+    ports:
+     - "8080:80"
+     - "443:443"
+
+  db:
+    container_name: mariadb
+    image: mariadb
+    # command: --init-file /init.sql
+#    volumes:
+ #       - ./sql_tables.sql:/init.sql
+    restart: always
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+      MYSQL_ROOT_PASSWORD: user
+      MYSQL_DATABASE: db
+    ports:
+     - "3306:3306"
+    
+
