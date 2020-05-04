@@ -1,46 +1,58 @@
 version: '3.7'
 
 services:
-  java:
-    container_name: openjdk
-    image: openjdk:alpine
-    depends_on:
-    - db
-    volumes:
-     - ./java:/java
-    working_dir: /java
-    command: java -version
-    depends_on:
-     - db
+    java:
+        container_name: openjdk
+        image: openjdk:alpine
+        depends_on:
+        - db
+        volumes:
+         - ./java:/java
+        working_dir: /java
+        command: java -version
+        depends_on:
+         - db
 
-  web:
-    container_name: nginx
-    image: nginx:alpine
-    volumes:
-     - ./web/:/usr/share/nginx/html
-    ports:
-     - "8080:80"
-     - "443:443"
+    web:
+        container_name: nginx
+        image: nginx:latest
+        volumes:
+            # - ./web/:/usr/share/nginx/html
+             - ./code:/code
+             - ./site.conf:/etc/nginx/conf.d/site.conf
+        ports:
+             - "8080:80"
+             - "443:443"
+        links:
+            - php
+     
+     
+    php:
+        image: php:7-fpm
+       # volumes:
+          #- ./web/:/var/www/html/
+          #- ./php:/usr/local/etc/php/php
+        - ./code:/code
+        container_name: php
 
-  db:
-    container_name: mariadb
-    image: mariadb
+
+    db:
+        container_name: mariadb
+        image: mariadb
+
+        volumes:
+         - ./sql_tables.sql://docker-entrypoint-initdb.d/1-sql_tables.sql
+
+        restart: always
+        environment:
+          MYSQL_USER: user
+          MYSQL_PASSWORD: user
+          MYSQL_ROOT_PASSWORD: user
+          MYSQL_DATABASE: db
+        ports:
+         - "3306:3306"
+        expose:
+          - "3306"
     
-#    volumes:
-#  - ./schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
-#  - ./data.sql:/docker-entrypoint-initdb.d/2-data.sql
-    
-    volumes:
-     - ./sql_tables.sql://docker-entrypoint-initdb.d/1-sql_tables.sql
-#     - ./data.sql:/docker-entrypoint-initdb.d/2-data.sql
-
-    restart: always
-    environment:
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user
-      MYSQL_ROOT_PASSWORD: user
-      # MYSQL_DATABASE: db
-    ports:
-     - "3306:3306"
     
 

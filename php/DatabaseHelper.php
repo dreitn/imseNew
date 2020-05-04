@@ -3,8 +3,8 @@
 class DatabaseHelper
 {
 
-    const username = "user"; // use a + your matriculation number
-    const password = "user"; // use your oracle db password
+    const username = "user";
+    const password = "user"; 
     const con_string = 'localhost';
 
     // Since we need only one connection object, it can be stored in a member variable.
