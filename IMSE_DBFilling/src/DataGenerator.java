@@ -18,21 +18,6 @@ public class DataGenerator {
         int count_rent = 0;
         int count_friendship = 0;
 
-        while (count_costumer < 400) {
-            String email = rdm.getRandomEmail();
-            int phone = rdm.getRandomInteger(100000000, 999999999);
-            String firstName = rdm.getRandomFirstName();
-            String lastName = rdm.getRandomLastName();
-            int locId = rdm.getRandomInteger(0, 100);
-
-            if (dbHelper.insertIntoCostumer(email, phone, firstName, lastName, locId)) {
-                count_costumer++;
-            }
-        }
-
-       ArrayList<String> email = dbHelper.selectCostumerEmail();
-       System.out.println("There are " + email.size() + " costumers in our database!");
-        
         while(count_locations < 100) {
             int locId = count_locations+1;
             int postcode = rdm.getRandomPostcode();
@@ -42,10 +27,29 @@ public class DataGenerator {
                 count_locations++;
             }
         }
-        
+
         ArrayList<Integer> locId = dbHelper.selectLocationId();
         System.out.println("There are " + locId.size() + " locations in our database!");
- 
+
+
+
+
+        while (count_costumer < 400) {
+            String email = rdm.getRandomEmail();
+            int phone = rdm.getRandomInteger(100000000, 999999999);
+            String firstName = rdm.getRandomFirstName();
+            String lastName = rdm.getRandomLastName();
+            int location_id = rdm.getRandomInteger(0, 100);
+
+            if (dbHelper.insertIntoCostumer(email, phone, firstName, lastName, location_id)) {
+                count_costumer++;
+            }
+            // System.out.println("costumers " + count_costumer);
+        }
+
+       ArrayList<String> email = dbHelper.selectCostumerEmail();
+       System.out.println("There are " + email.size() + " costumers in our database!");
+
      
         ArrayList<Integer> registrationNumber = dbHelper.selectRegistrationNumber();
         System.out.println("There are " + registrationNumber.size() + " cars in our database!");

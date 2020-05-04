@@ -42,6 +42,7 @@ class DatabaseHelper {
             stmt.execute(sql);
             cos_count++;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
         return true;
