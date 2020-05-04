@@ -2,44 +2,27 @@
 
 class DatabaseHelper
 {
-
     const username = "user";
     const password = "user";
     const con_string = 'localhost';
+    const db = "db";
 
-    // Since we need only one connection object, it can be stored in a member variable.
-    // $conn is set in the constructor.
     protected $conn;
 
-    // Create connection in the constructor
-    public function __construct()
+    public function set_connection()
     {
-        try {
+        $conn = mysqli_connect(self::con_string, self::password, self::username, self::db);
 
-            $this->conn = @oci_connect(
-                DatabaseHelper::username,
-                DatabaseHelper::password,
-                DatabaseHelper::con_string
-            );
-
-            //check if the connection object is != null
-            if (!$this->conn) {
-                // die(String(message)): stop PHP script and output message:
-                die("DB error: Connection can't be established!");
-            }
-
-        } catch (Exception $e) {
-            die("DB error: {$e->getMessage()}");
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        } else {
+            echo "Connected successfully";
         }
     }
 
-    public function __destruct()
-    {
-        // clean up
-        @oci_close($this->conn);
-    }
 
-
+/*
     public function selectAllCostumers($email, $phone, $fname, $lname, $locid)
     {
 
@@ -106,6 +89,6 @@ class DatabaseHelper
         return $success;
     }
 
-
+*/
 
 }
