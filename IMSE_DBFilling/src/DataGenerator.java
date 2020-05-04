@@ -9,28 +9,38 @@ public class DataGenerator {
         RandomHelper rdm = new RandomHelper();
         DatabaseHelper dbHelper = new DatabaseHelper();
 
-        int costumer = 0;
-       while (costumer < 200) {
-        	String email = rdm.getRandomEmail();
+        int count_costumer = 0;
+        int count_locations = 0;
+        int count_car = 0;
+        int count_billing = 0;
+        int count_insurance = 0;
+        int count_reservation = 0;
+        int count_rent = 0;
+        int count_friendship = 0;
+
+        while (count_costumer < 400) {
+            String email = rdm.getRandomEmail();
             int phone = rdm.getRandomInteger(100000000, 999999999);
             String firstName = rdm.getRandomFirstName();
             String lastName = rdm.getRandomLastName();
             int locId = rdm.getRandomInteger(0, 100);
 
             if (dbHelper.insertIntoCostumer(email, phone, firstName, lastName, locId)) {
-                costumer++;
+                count_costumer++;
             }
         }
 
        ArrayList<String> email = dbHelper.selectCostumerEmail();
        System.out.println("There are " + email.size() + " costumers in our database!");
         
-        for (int i = 0; i < 100; i++) {
-        	int locId = i+1;
-        	int postcode = rdm.getRandomPostcode();
-        	String street = rdm.getRandomString(5, 15);
-        	String city = "Vienna";
-            dbHelper.insertIntoLocation(locId, postcode, street, city);
+        while(count_locations < 100) {
+            int locId = count_locations+1;
+            int postcode = rdm.getRandomPostcode();
+            String street = rdm.getRandomString(5, 15);
+            String city = "Vienna";
+            if(dbHelper.insertIntoLocation(locId, postcode, street, city)){
+                count_locations++;
+            }
         }
         
         ArrayList<Integer> locId = dbHelper.selectLocationId();
@@ -39,62 +49,73 @@ public class DataGenerator {
      
         ArrayList<Integer> registrationNumber = dbHelper.selectRegistrationNumber();
         System.out.println("There are " + registrationNumber.size() + " cars in our database!");
-        
 
-        for (int i = 1; i < 2000; i++) {
-            int regnr = i;
+        while (count_car < 200) {
+            int regnr = count_car+1;
             String cmodel= rdm.getRandomString(4, 14);
-            int year = rdm.getRandomInteger(2000, 2019);
+            int year = rdm.getRandomInteger(2000, 2020);
             int price = rdm.getRandomInteger(30, 100);
 
-           dbHelper.insertIntoCar(regnr, cmodel, year, price);
+            if(dbHelper.insertIntoCar(regnr, cmodel, year, price)){
+                count_car++;
+            }
         }
 
-        for (int i = 0; i < 100; i++) { 
-            int nr = i;
+        while (count_billing<100) {
+            int nr = count_billing+1;
             int total = rdm.getRandomInteger(0, 1000);
 
             long millis=System.currentTimeMillis();
             java.sql.Date date=new java.sql.Date(millis);
             String c_mail = rdm.getRandomEmail();
 
-            dbHelper.insertIntoBilling(nr, total, date.toString(), c_mail);
+            if(dbHelper.insertIntoBilling(nr, total, date.toString(), c_mail)){
+                count_billing++;
+            }
         }
         
         int countBilling = dbHelper.selectCountAllFromBilling();
         System.out.println("There are " + countBilling + " entities in the table 'Billing' in our database!");
 
       
-        for (int i = 0; i <100; i++) { 
-            int nr = i+1;
+        while (count_reservation<100) {
+            int nr = count_reservation+1;
             java.sql.Date date_from = new  java.sql.Date(System.currentTimeMillis());
             java.sql.Date date_return = new  java.sql.Date(System.currentTimeMillis());
 
             int amount = rdm.getRandomInteger(50, 1000);
             int billnr = rdm.getRandomInteger(0, 100);
 
-            dbHelper.insertIntoReservation(nr, date_from.toString(), date_return.toString(), amount, billnr);
+            if(dbHelper.insertIntoReservation(nr, date_from.toString(), date_return.toString(), amount, billnr)){
+                count_reservation++;
+            }
         }
           
-        for (int i = 0 ; i < 600; i++) {
-            int nr = i;
+        while (count_insurance<100) {
+            int nr = count_insurance+1;
             String name = rdm.getRandomFirstName() + " insurance";
-            dbHelper.insertIntoInsurance(nr, name);
-        }
-
-        for(int i = 0; i<300; i++){
-            String c_email_1 = rdm.getRandomEmail();
-            String c_email_2 = rdm.getRandomEmail();
-            if(!(c_email_1.equals(c_email_2))){
-            dbHelper.insertIntoAreFriends(c_email_1, c_email_2);
+            if (dbHelper.insertIntoInsurance(nr, name)){
+                count_insurance++;
             }
         }
 
-        for (int i = 0; i < registrationNumber.size(); i++) {
-            int regnr = registrationNumber.get(i);
+        while (count_friendship < 200){
+            String c_email_1 = rdm.getRandomEmail();
+            String c_email_2 = rdm.getRandomEmail();
+            if(!(c_email_1.equals(c_email_2))){
+                if(dbHelper.insertIntoAreFriends(c_email_1, c_email_2)){
+                    count_friendship++;
+                }
+            }
+        }
+
+        while (count_rent < registrationNumber.size()) {
+            int regnr = registrationNumber.get(count_rent);
             String rent_email = rdm.getRandomEmail();
-            int rent_reservation = i;
-            dbHelper.insertIntoRent(rent_email, regnr, rent_reservation);
+            int rent_reservation = count_rent+1;
+            if(dbHelper.insertIntoRent(rent_email, regnr, rent_reservation)){
+                count_rent++;
+            }
         }
 
         ArrayList<String> rent = dbHelper.selectRENTSize();

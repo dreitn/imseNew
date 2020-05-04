@@ -1,6 +1,5 @@
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 
@@ -48,7 +47,7 @@ class DatabaseHelper {
         return true;
     }
 
-    void insertIntoLocation(int LocId, int zipcode, String street, String city) {
+    boolean insertIntoLocation(int LocId, int zipcode, String street, String city) {
         try {
             String sql = "INSERT INTO LOCATIONS (LOCATION_ID, ZIP_CODE, STREET, CITY) VALUES ('" +
             		LocId +
@@ -62,12 +61,12 @@ class DatabaseHelper {
             stmt.execute(sql);
 
         } catch (Exception e) {
-            System.err.println("Error at: insertIntoLocations\nmessage: " + e.getMessage());
-            cos_count--;
+            return false;
         }
+        return true;
     }
 
-    void insertIntoCar(int regnr, String cmodel, int year, int price) {
+    boolean insertIntoCar(int regnr, String cmodel, int year, int price) {
         try {
             String sql = "INSERT INTO CAR (REGISTRATION_NUMBER, CAR_MODEL, MODEL_YEAR, DAILY_PRICE) VALUES ('" +
             		regnr +
@@ -80,11 +79,12 @@ class DatabaseHelper {
                     "')";
             stmt.execute(sql);
         } catch (Exception e) {
-            System.err.println("Error at: insertIntoCar\nmessage: " + e.getMessage());
+            return false;
         }
+        return true;
     }
 
-    void insertIntoBilling(int nr, int total,  String date, String c_mail) {
+    boolean insertIntoBilling(int nr, int total, String date, String c_mail) {
         try {
             String sql = "INSERT INTO BILLING (BILL_NUMBER, TOTAL_PRICE, BILLDATE, C_EMAIL) VALUES ('" +
             		nr +
@@ -97,11 +97,12 @@ class DatabaseHelper {
                     "')";
             stmt.execute(sql);
         } catch (Exception e) {
-            System.err.println("Error at: insertIntoBilling\nmessage: " + e.getMessage());
+            return false;
         }
+        return true;
     }
 
-    void insertIntoReservation(int nr,  String from, String returnd, int amount, int billnr) {
+    boolean insertIntoReservation(int nr,  String from, String returnd, int amount, int billnr) {
         try {
             String sql = "INSERT INTO RESERVATION (RESERVATION_NUMBER, FROM_DATE, RETURN_DATE, AMOUNT, RESERVATION_BILL_NUMBER) VALUES ('" +
             		nr +
@@ -116,11 +117,12 @@ class DatabaseHelper {
                     "')";
             stmt.execute(sql);
         } catch (Exception e) {
-            System.err.println("Error at: insertIntoReservation\nmessage: " + e.getMessage());
+            return false;
         }
+        return true;
     }
 
-    void insertIntoInsurance( int nr, String name) {
+    boolean insertIntoInsurance( int nr, String name) {
         try {
             String sql = "INSERT INTO INSURANCE (INSURANCE_NUMBER, NAME) VALUES ('" +
             	nr+
@@ -129,11 +131,12 @@ class DatabaseHelper {
                     "')";
             stmt.execute(sql);
         } catch (Exception e) {
-            System.err.println("Error at: insertIntoInsurance\nmessage: " + e.getMessage());
+            return false;
         }
+        return true;
     }
 
-    void insertIntoAreFriends( String email1, String email2) {
+    boolean insertIntoAreFriends( String email1, String email2) {
         try {
             String sql = "INSERT INTO ARE_FRIENDS (FRIEND_COSTUMER_EMAIL_1, FRIEND_COSTUMER_EMAIL_2) VALUES ('" +
                     email1+
@@ -142,11 +145,12 @@ class DatabaseHelper {
                     "')";
             stmt.execute(sql);
         } catch (Exception e) {
-            System.err.println("Error at: insertIntoAreFriends\nmessage: " + e.getMessage());
+           return false;
         }
+        return true;
     }
 
-    void insertIntoRent(String email1, int car, int reservation) {
+    boolean insertIntoRent(String email1, int car, int reservation) {
         try {
             String sql = "INSERT INTO RENT(RENT_EMAIL, RENT_CAR, RENT_RESERVATION) VALUES ('" +
                     email1+
@@ -157,8 +161,9 @@ class DatabaseHelper {
                     "')";
             stmt.execute(sql);
         } catch (Exception e) {
-            System.err.println("Error at: insertIntoRent\nmessage: " + e.getMessage());
+            return false;
         }
+        return true;
     }
 
     //SELECT
