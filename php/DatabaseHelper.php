@@ -3,9 +3,9 @@
 class DatabaseHelper
 {
 
-    const username = 'a11728483'; // use a + your matriculation number
-    const password = 'dbs19'; // use your oracle db password
-    const con_string = 'lab';
+    const username = "user"; // use a + your matriculation number
+    const password = "user"; // use your oracle db password
+    const con_string = 'localhost';
 
     // Since we need only one connection object, it can be stored in a member variable.
     // $conn is set in the constructor.
@@ -75,24 +75,6 @@ class DatabaseHelper
         return $success;
     }
 
-    public function deleteCostumer($email)
-    {
-        $errorcode = 0;
-
-        $sql = 'BEGIN DELETE_COSTUMER:email, :errorcode); END;';
-        $statement = @oci_parse($this->conn, $sql);
-
-        //  Bind the parameters
-        @oci_bind_by_name($statement, ':email', $email);
-        @oci_bind_by_name($statement, ':errorcode', $errorcode);
-
-        // Execute Statement
-        @oci_execute($statement);
-
-        @oci_free_statement($statement);
-
-        return $errorcode;
-    }
 
     public function selectAllBill($billnr, $total, $date, $c_email)
     {
@@ -124,21 +106,6 @@ class DatabaseHelper
         return $success;
     }
 
-    public function deleteBill($billnr)
-    {
-        $errorcode = 0;
 
-        $sql = 'BEGIN DELETE_BILL(:bill_number, :errorcode); END;';
-        $statement = @oci_parse($this->conn, $sql);
-
-        @oci_bind_by_name($statement, ':bill_number', $billnr);
-        @oci_bind_by_name($statement, ':errorcode', $errorcode);
-
-        @oci_execute($statement);
-
-        @oci_free_statement($statement);
-
-        return $errorcode;
-    }
 
 }

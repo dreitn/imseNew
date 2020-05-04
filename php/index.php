@@ -114,25 +114,6 @@ $bill_array = $database->selectAllBill($billnr, $total, $date, $c_mail);
 <br>
 <hr>
 
-<!-- Delete Person -->
-<h2>Delete Costumer: </h2>
-<form method="post" action="delCostumer.php">
-    <!-- ID textbox -->
-    <div>
-        <label for="del_costumer">Email:</label>
-        <input id="del_costumer" name="email" type="text" maxlength="30">
-    </div>
-    <br>
-
-    <!-- Submit button -->
-    <div>
-        <button type="submit">
-            Delete Costumer
-        </button>
-    </div>
-</form>
-<br>
-<hr>
 
 <!-- Search form -->
 <h2>Costumer Search:</h2>
@@ -209,26 +190,6 @@ $bill_array = $database->selectAllBill($billnr, $total, $date, $c_mail);
     <div>
         <button type="submit">
             Add Billing
-        </button>
-    </div>
-</form>
-<br>
-<hr>
-
-<!-- Delete Person -->
-<h2>Delete Bill: </h2>
-<form method="post" action="deleteBilling.php">
-    <!-- ID textbox -->
-    <div>
-        <label for="del_billing">Billnumber:</label>
-        <input id="del_billing" name="bill" type="number">
-    </div>
-    <br>
-
-    <!-- Submit button -->
-    <div>
-        <button type="submit">
-            Delete Bill
         </button>
     </div>
 </form>
