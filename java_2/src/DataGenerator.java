@@ -33,8 +33,6 @@ public class DataGenerator {
         System.out.println("There are " + locId.size() + " locations in our database!");
 
 
-
-
         while (count_costumer < 400) {
             String email = rdm.getRandomEmail();
             int phone = rdm.getRandomInteger(100000000, 999999999);
