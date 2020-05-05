@@ -1,6 +1,6 @@
 <?php
 
-    $db = new mysqli("127.0.0.1", "user", "user", "db", "3306");
+    $db = new mysqli("mariadb", "user", "user", "db", "3306");
     $link = mysqli_connect("mariadb", "user", "user", "db", "3306");
 
     if (!$link) {
