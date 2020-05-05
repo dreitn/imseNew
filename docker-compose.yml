@@ -5,40 +5,28 @@ services:
     java:
         container_name: openjdk
         image: openjdk:alpine
-        depends_on:
-        - db
         volumes:
          - ./java:/java
         working_dir: /java
-        command: java -version
-        depends_on:
-         - db
-         
+        command: java -version       
     
     web:
         image: php:7.2.2-apache
         container_name: php_web
-        depends_on:
-         - db
         volumes:
-        - ./web:/var/www/html/:z
-        ports:
-        - "80:80"
+        - ./web:/var/www/html/
         command: "/bin/sh -c 'docker-php-ext-install mysqli && exec apache2-foreground'"
         
         stdin_open: true
         tty: true
-        links:
-        - db
-        networks:
-        - frontend
-        - backend
+        ports:
+        - "80:80"
 
     db:
         container_name: mariadb
         image: mariadb
         volumes:
-         - ./sql_tables.sql://docker-entrypoint-initdb.d/1-sql_tables.sql:z
+         - ./sql_tables.sql://docker-entrypoint-initdb.d/init_tables.sql
 
         restart: always
         environment:
@@ -46,13 +34,4 @@ services:
             MYSQL_PASSWORD: user
             MYSQL_ROOT_PASSWORD: user
             MYSQL_DATABASE: db
-        ports:
-         - "3306:3306"
-        #expose: 
-#         - "3306"
-        networks:
-        - backend
 
-networks:
-  frontend:
-  backend:
