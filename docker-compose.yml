@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
 
@@ -13,36 +13,32 @@ services:
         command: java -version
         depends_on:
          - db
+         
     
     web:
-        container_name: nginx
-        image: nginx:latest
+        image: php:7.2.2-apache
+        container_name: php_web
+        depends_on:
+         - db
         volumes:
-            - ./code:/code:ro
-            - ./site.conf:/etc/nginx/conf.d/default.conf:z
+        - ./web:/var/www/html/:z
         ports:
-             - "8080:80"
-             - "443:443"
+        - "80:80"
+        command: "/bin/sh -c 'docker-php-ext-install mysqli && exec apache2-foreground'"
+        
+        stdin_open: true
+        tty: true
         links:
-             - php
-     
-     
-    php:
-        container_name: php
-        image: php:fpm
-        command: "docker-php-ext-install mysqli"
-        volumes:
-            - ./code:/code
-          #- ./web/:/var/www/html/
-          #- ./php:/usr/local/etc/php/php
-        restart: always
-
+        - db
+        networks:
+        - frontend
+        - backend
 
     db:
         container_name: mariadb
         image: mariadb
         volumes:
-            - ./sql_tables.sql://docker-entrypoint-initdb.d/1-sql_tables.sql
+         - ./sql_tables.sql://docker-entrypoint-initdb.d/1-sql_tables.sql:z
 
         restart: always
         environment:
@@ -51,7 +47,12 @@ services:
             MYSQL_ROOT_PASSWORD: user
             MYSQL_DATABASE: db
         ports:
-            - "3306:3306"
-        expose:
-            - "3306"
+         - "3306:3306"
+        #expose: 
+#         - "3306"
+        networks:
+        - backend
 
+networks:
+  frontend:
+  backend:
