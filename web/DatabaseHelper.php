@@ -2,29 +2,6 @@
 
 class DatabaseHelper
 {
-    const username = "user";
-    const password = "user";
-    const hostname = 'mariadb';
-    const db = "db";
-
-    protected $conn;
-
-    public function set_connection($conn)
-    {
-
-
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        } else {
-            echo "Connected successfully";
-        }
-    }
-
-    public function closeConnection() {
-        //mysqli_close($conn);
-    }
-
 
     public function selectAllCostumers($conn, $email, $phone, $fname, $lname, $locid)
     {
@@ -92,6 +69,24 @@ class DatabaseHelper
 */
         return $result;
     }
+
+    public function selectAllLocations($conn,$locid, $zip_code, $street, $city)
+    {
+        $sql = "SELECT * FROM BILLING
+            WHERE LOCATION_ID LIKE '%{$locid}%'
+            and ZIP_CODE LIKE '%{$zip_code}'
+            and STREET LIKE '%{$street}'
+            and CITY LIKE '%{$city}'
+            ORDER BY LOCATION_ID ASC";
+
+        $result = mysqli_query($conn, $sql);
+
+
+        return $result;
+    }
+
+
+
 /*
     public function insertIntoBilling($total, $date, $c_mail)
     {

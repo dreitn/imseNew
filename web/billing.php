@@ -1,5 +1,8 @@
 <?php
 
+echo "we are in billing.php!";
+
+
 // Include DatabaseHelper.php file
 require_once('DatabaseHelper.php');
 
@@ -19,42 +22,43 @@ if ($conn->connect_error) {
 // Instantiate DatabaseHelper class
 $database = new DatabaseHelper();
 
-
-
-$locationid = '';
-if (isset($_GET['locationid'])) {
-    $sql = "SELECT LOCATION_ID FROM LOCATIONS". $_GET['LOCATION_ID'];
+$email = '';
+if (isset($_GET['email'])) {
+    $sql = "SELECT EMAIL FROM COSTUMER". $_GET['email'];
 }
 else {
-    $sql = "SELECT * FROM LOCATIONS".$_GET['LOCATION_ID'];
+    $sql = "SELECT * FROM COSTUMER".$_GET['email'];
 }
 
 
-$zip_code = '';
-if (isset($_GET['ZIP_CODE'])) {
-    $zip_code = $_GET['ZIP_CODE'];
+
+$billnr = '';
+if (isset($_GET['BILL_NUMBER'])) {
+    $billnr = $_GET['BILL_NUMBER'];
 }
 
-$street = '';
-if (isset($_GET['STREET'])) {
-    $street = $_GET['STREET'];
+$total = '';
+if (isset($_GET['TOTAL_PRICE'])) {
+    $total = $_GET['TOTAL_PRICE'];
 }
 
-$city = '';
-if (isset($_GET['CITY'])) {
-    $city = $_GET['CITY'];
+$date = '';
+if (isset($_GET['BILLDATE'])) {
+    $date = $_GET['BILLDATE'];
 }
 
-
+$c_mail = '';
+if (isset($_GET['C_EMAIL '])) {
+    $c_mail  = $_GET['C_EMAIL '];
+}
 
 //Fetch data from database
-$loc_array = $database->selectAllLocations($conn, $locationid, $zip_code, $street, $city);
+$costumer_array = $database->selectAllCostumers($conn, $email, $phone, $fname, $surname, $locationid);
 
 ?>
 
 <html>
 <head>
-    <title>CAR RENTAL DATABASE</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap4.min.css">
@@ -64,11 +68,8 @@ $loc_array = $database->selectAllLocations($conn, $locationid, $zip_code, $stree
 <body>
 <style>
 </style>
-<br>
-<h1>CAR RENTAL DATABASE</h1>
-
 <div>
-    <form id='searchform' action='index.php' method='get'>
+    <form id='searchform' action='customers.php' method='get'>
         <p style = "margin-left: 15px;">
             <a href='index.php'>All Locations</a> ---
             <a href='billing.php'>All Bills</a>---
@@ -77,54 +78,50 @@ $loc_array = $database->selectAllLocations($conn, $locationid, $zip_code, $stree
             <a href='rent.php'>New Rent</a>---
         </p>
         <p style = "display:none">
-            <input id='location' name='location' type=integer value='<?php echo $_GET['location']; ?>' />
+            <input id='email' name='email' type=String value='<?php echo $_GET['email']; ?>' />
         </p>
     </form>
 </div>
 <?php
+// check if search view of list view
+
 if (isset($_GET['search'])) {
-    $sql = "SELECT * FROM LOCATIONS WHERE LOCATION_ID =  '" . $_GET['search'] . "'";
+    $sql = "SELECT * FROM COSTUMER WHERE EMAIL =  '" . $_GET['search'] . "'";
 }
 else{
-    $sql = "SELECT * FROM LOCATIONS JOIN COSTUMER on LOCATIONS.LOCATION_ID = COSTUMER.LOCATIONID";
+    $sql = "SELECT * FROM COSTUMER JOIN LOCATIONS L on COSTUMER.LOCATIONID = L.LOCATION_ID";
 }
 
 // execute sql statement
 $stmt = mysqli_query($conn,$sql);
 ?>
-
 <table class="table table-bordered table-hovered dt-responsive nowrap" id="myTable" >
     <thead>
     <tr>
-        <th>Location ID</th>
-        <th>Zip Code</th>
-        <th>Street</th>
-        <th>City</th>
+        <th>Customer Email</th>
+        <th>Phone number</th>
+        <th>Name</th>
+        <th>Lastname</th>
     </tr>
     </thead>
     <tbody>
-
-
     <?php
     // fetch rows of the executed sql query
     while ($row = mysqli_fetch_array($stmt)) {
         echo "<tr>";
-        echo "<td>" . $row['LOCATION_ID'] . "</td>";
-        echo "<td>" . $row['ZIP_CODE'] . "</td>";
-        echo "<td>" . $row['STREET'] . "</td>";
-        echo "<td>" . $row['CITY'] . "</td>";
+        echo "<td>" . $row['EMAIL'] . "</td>";
+        echo "<td>" . $row['PHONE_NUMBER'] . "</td>";
+        echo "<td>" . $row['FIRStNAME'] . "</td>";
+        echo "<td>" . $row['SURNAME'] .  "</td>";
         echo "</tr>";
     }
     ?>
-
     </tbody>
 </table>
 <?php
 // clean up connections
 mysqli_close($conn);
 ?>
-
-
 <script type="text/javascript">
     $(document).ready(function() {
         $('#myTable').DataTable();

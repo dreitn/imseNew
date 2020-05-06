@@ -18,6 +18,7 @@ public class DataGenerator {
         int count_rent = 0;
         int count_friendship = 0;
 
+
         while(count_locations < 100) {
             int locId = count_locations+1;
             int postcode = rdm.getRandomPostcode();
