@@ -74,7 +74,8 @@ $loc_array = $database->selectAllLocations($conn, $locationid, $zip_code, $stree
             <a href='billing.php'>All Bills</a>---
             <a href='costumers.php'>All Customers</a>---
             <a href='car.php'>All Cars</a>---
-            <a href='rent.php'>New Rent</a>---
+            <a href="reservations.php">All Reservations</a>---
+            <a href='Insert_to_Tables.php'>Insert to Tables</a>---
         </p>
         <p style = "display:none">
             <input id='location' name='location' type=integer value='<?php echo $_GET['location']; ?>' />
@@ -146,7 +147,7 @@ mysqli_close($conn);
         .button {
             display: inline-block;
             border-radius: 4px;
-            background-color: #00a6ff ;
+            background-color: orangered ;
             border: none;
             color: #FFFFFF;
             text-align: center;

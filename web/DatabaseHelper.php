@@ -16,35 +16,11 @@ class DatabaseHelper
             ORDER BY surname ASC";
 
         $result = mysqli_query($conn, $sql);
-/*
 
-        if (mysqli_num_rows($result) > 0) {
-            while($row = mysqli_fetch_assoc($result)) {
-                echo "Name: " . $row["EMAIL"]. "<br>";
-                echo "Phone: " . $row["PHONE_NUMBER"]. "<br>";
-                echo "First Name: " . $row["FIRSTNAME"]. "<br>";
-                echo "Family Name: " . $row["SURNAME"]. "<br>";
-            }
-        } else {
-            echo "0 results";
-        }
-*/
         return $result;
-
     }
 
-    /*
-    public function insertIntoCostumer($email, $phone, $name, $surname, $location)
-    {
-        $sql = "INSERT INTO Costumer (EMAIL, PHONE_NUMBER, FIRSTNAME, SURNAME, LOCATIONID) VALUES ('{$email}', '{$phone}', '{$name}','{$surname}', '{$location}')";
 
-        $statement = @oci_parse($this->conn, $sql);
-        $success = @oci_execute($statement) && @oci_commit($this->conn);
-        @oci_free_statement($statement);
-        return $success;
-    }
-
-*/
     public function selectAllBill($conn,$billnr, $total, $date, $c_email)
     {
         $sql = "SELECT * FROM BILLING
@@ -56,17 +32,6 @@ class DatabaseHelper
 
         $result = mysqli_query($conn, $sql);
 
-/*
-        if (mysqli_num_rows($result) > 0) {
-            while($row = mysqli_fetch_assoc($result)) {
-                echo "Bill number: " . $row["BILL_NUMBER"]. "<br>";
-                echo "Total Price: " . $row["TOTAL_PRICE"]. "<br>";
-                echo "Date: " . $row["BILLDATE"]. "<br>";
-            }
-        } else {
-            echo "0 results";
-        }
-*/
         return $result;
     }
 
@@ -81,23 +46,61 @@ class DatabaseHelper
 
         $result = mysqli_query($conn, $sql);
 
+        return $result;
+    }
+
+    public function selectAllCars($conn,$reg_num, $model, $price)
+    {
+        $sql = "SELECT * FROM CAR
+            WHERE REGISTRATION_NUMBER LIKE '%{$reg_num}%'
+            and CAR_MODEL LIKE '%{$model}'
+            and DAILY_PRICE LIKE '%{$price}'
+            ORDER BY REGISTRATION_NUMBER ASC";
+
+        $result = mysqli_query($conn, $sql);
+
+        return $result;
+    }
+
+    public function selectAllReservations($conn,$resnr, $from, $return, $amount, $bill)
+    {
+        $sql = "SELECT * FROM RESERVATION
+            WHERE RESERVATION_NUMBER LIKE '%{$resnr}%'
+            and FROM_DATE LIKE '%{$from}'
+            and RETURN_DATE LIKE '%{$return}'
+            and AMOUNT LIKE '%{$amount}'
+            and RESERVATION_BILL_NUMBER LIKE '%{$bill}'
+            ORDER BY RESERVATION_NUMBER ASC";
+
+        $result = mysqli_query($conn, $sql);
 
         return $result;
     }
 
 
 
-/*
-    public function insertIntoBilling($total, $date, $c_mail)
+   public function insertIntoCostumer($conn, $email, $phone, $name, $surname, $location)
+   {
+       $sql = "INSERT INTO Costumer (EMAIL, PHONE_NUMBER, FIRSTNAME, SURNAME, LOCATIONID) VALUES ('{$email}', '{$phone}', '{$name}','{$surname}', '{$location}')";
+
+       if (mysqli_query($conn, $sql)) {
+           echo "Insert successfully!";
+       } else {
+           echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+       }
+
+   }
+
+
+    public function insertIntoBilling($conn, $total, $date, $c_mail)
     {
         $sql = "INSERT INTO BILLING (TOTAL_PRICE, BILLDATE, C_EMAIL) VALUES ('{$total}', '{$date}','{$c_mail}')";
 
-        $statement = @oci_parse($this->conn, $sql);
-        $success = @oci_execute($statement) && @oci_commit($this->conn);
-        @oci_free_statement($statement);
-        return $success;
+        if (mysqli_query($conn, $sql)) {
+            echo "Insert successfully!";
+        } else {
+            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        }
     }
 
-
-*/
 }

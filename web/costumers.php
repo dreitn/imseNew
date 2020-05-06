@@ -68,9 +68,10 @@ $costumer_array = $database->selectAllCostumers($conn, $email, $phone, $fname, $
         <p style = "margin-left: 15px;">
             <a href='index.php'>All Locations</a> ---
             <a href='billing.php'>All Bills</a>---
-            <a href='customers.php'>All Customers</a>---
+            <a href='costumers.php'>All Customers</a>---
             <a href='car.php'>All Cars</a>---
-            <a href='rent.php'>New Rent</a>---
+            <a href="reservations.php">All Reservations</a>---
+            <a href='Insert_to_Tables.php'>Insert to Tables</a>---
         </p>
         <p style = "display:none">
             <input id='email' name='email' type=String value='<?php echo $_GET['email']; ?>' />
@@ -106,7 +107,7 @@ $stmt = mysqli_query($conn,$sql);
         echo "<tr>";
         echo "<td>" . $row['EMAIL'] . "</td>";
         echo "<td>" . $row['PHONE_NUMBER'] . "</td>";
-        echo "<td>" . $row['FIRStNAME'] . "</td>";
+        echo "<td>" . $row['FIRSTNAME'] . "</td>";
         echo "<td>" . $row['SURNAME'] .  "</td>";
         echo "</tr>";
     }
@@ -138,7 +139,7 @@ mysqli_close($conn);
         .button {
             display: inline-block;
             border-radius: 4px;
-            background-color: #00a6ff ;
+            background-color: orangered ;
             border: none;
             color: #FFFFFF;
             text-align: center;

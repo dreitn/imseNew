@@ -20,35 +20,40 @@ if ($conn->connect_error) {
 $database = new DatabaseHelper();
 
 
-if (isset($_GET['billnr'])) {
-    $sql = "SELECT BILL_NUMBER FROM BILLING". $_GET['billnr'];
+if (isset($_GET['resnr'])) {
+    $sql = "SELECT RESERVATION_NUMBER FROM RESERVATION". $_GET['resnr'];
 }
 else {
-    $sql = "SELECT * FROM BILLING".$_GET['email'];
+    $sql = "SELECT * FROM RESERVATION".$_GET['resnr'];
 }
 
-$billnr = '';
-if (isset($_GET['BILL_NUMBER'])) {
-    $billnr = $_GET['BILL_NUMBER'];
+$resnr = '';
+if (isset($_GET['RESERVATION_NUMBER'])) {
+    $resnr = $_GET['RESERVATION_NUMBER'];
 }
 
-$total = '';
-if (isset($_GET['TOTAL_PRICE'])) {
-    $total = $_GET['TOTAL_PRICE'];
+$from = '';
+if (isset($_GET['FROM_DATE'])) {
+    $from = $_GET['FROM_DATE'];
 }
 
-$date = '';
-if (isset($_GET['BILLDATE'])) {
-    $date = $_GET['BILLDATE'];
+$return = '';
+if (isset($_GET['RETURN_DATE'])) {
+    $date = $_GET['RETURN_DATE'];
 }
 
-$c_mail = '';
-if (isset($_GET['C_EMAIL '])) {
-    $c_mail  = $_GET['C_EMAIL '];
+$amount = '';
+if (isset($_GET['AMOUNT'])) {
+    $amount  = $_GET['AMOUNT'];
+}
+
+$bill = '';
+if (isset($_GET['RESERVATION_BILL_NUMBER'])) {
+    $bill  = $_GET['RESERVATION_BILL_NUMBER'];
 }
 
 //Fetch data from database
-$costumer_array = $database->selectAllBill($conn, $billnr, $total, $date, $c_mail);
+$reservation_array = $database->selectAllReservations($conn, $resnr, $from, $return, $amount, $bill);
 
 ?>
 
@@ -64,7 +69,7 @@ $costumer_array = $database->selectAllBill($conn, $billnr, $total, $date, $c_mai
 <style>
 </style>
 <div>
-    <form id='searchform' action='billing.php' method='get'>
+    <form id='searchform' action='reservations.php' method='get'>
         <p style = "margin-left: 15px;">
             <a href='index.php'>All Locations</a> ---
             <a href='billing.php'>All Bills</a>---
@@ -74,7 +79,7 @@ $costumer_array = $database->selectAllBill($conn, $billnr, $total, $date, $c_mai
             <a href='Insert_to_Tables.php'>Insert to Tables</a>---
         </p>
         <p style = "display:none">
-            <input id='bill' name='bill' type=int value='<?php echo $_GET['billnr']; ?>' />
+            <input id='resnr' name='resnr' type=int value='<?php echo $_GET['resnr']; ?>' />
         </p>
     </form>
 </div>
@@ -82,10 +87,7 @@ $costumer_array = $database->selectAllBill($conn, $billnr, $total, $date, $c_mai
 // check if search view of list view
 
 if (isset($_GET['search'])) {
-    $sql = "SELECT * FROM BILLING WHERE BILL_NUMBER =  '" . $_GET['search'] . "'";
-}
-else{
-    $sql = "SELECT * FROM BILLING JOIN COSTUMER C2 on BILLING.C_EMAIL = C2.EMAIL";
+    $sql = "SELECT * FROM RESERVATION WHERE RESERVATION_NUMBER =  '" . $_GET['search'] . "'";
 }
 
 // execute sql statement
@@ -94,9 +96,10 @@ $stmt = mysqli_query($conn,$sql);
 <table class="table table-bordered table-hovered dt-responsive nowrap" id="myTable" >
     <thead>
     <tr>
-        <th>Bill number</th>
-        <th>Total Price</th>
-        <th>Bill Date</th>
+        <th>Reservation Number</th>
+        <th>From Date</th>
+        <th>Return Date</th>
+        <th>Amount</th>
     </tr>
     </thead>
     <tbody>
@@ -104,9 +107,10 @@ $stmt = mysqli_query($conn,$sql);
     // fetch rows of the executed sql query
     while ($row = mysqli_fetch_array($stmt)) {
         echo "<tr>";
-        echo "<td>" . $row['BILL_NUMBER'] . "</td>";
-        echo "<td>" . $row['TOTAL_PRICE'] . "</td>";
-        echo "<td>" . $row['BILLDATE'] . "</td>";
+        echo "<td>" . $row['RESERVATION_NUMBER'] . "</td>";
+        echo "<td>" . $row['FROM_DATE'] . "</td>";
+        echo "<td>" . $row['RETURN_DATE'] . "</td>";
+        echo "<td>" . $row['AMOUNT'] . "</td>";
         echo "</tr>";
     }
     ?>
