@@ -56,10 +56,10 @@ $rent_array = $database->selectAllRents($conn, $email, $car, $res);
             <a href="rent.php">All Rents</a>  |
             <a href='Insert_to_Tables.php'>Insert to Tables</a>
         </p>
-        <p style = "display:none">
-            <input id='email' name='email' type=String value='<?php echo $_GET['RENT_EMAIL']; ?>' />
-            <input id='car' name='car' type=String value='<?php echo $_GET['RENT_CAR']; ?>' />
-            <input id='res' name='res' type=String value='<?php echo $_GET['RENT_RESERVATION']; ?>' />
+        <p style = "margin-left: 5px;">
+            <strong>Find All Rents of the Customer: <strong>
+                    <input id='cosre' name='cosre' type=text value='<?php echo $_GET['cosre']; ?>' />
+                    <input id='submit' type='submit' value='Find' />
         </p>
     </form>
 </div>
@@ -72,6 +72,11 @@ if (isset($_GET['search'])) {
 else{
     $sql = "SELECT * FROM RENT JOIN CAR C2 on RENT.RENT_CAR = C2.REGISTRATION_NUMBER";
 }
+
+if (isset($_GET['cosre'])) {
+    $sql = "SELECT * FROM RENT WHERE RENT_EMAIL =  '" . $_GET['cosre'] . "'";
+}
+
 
 // execute sql statement
 $stmt = mysqli_query($conn,$sql);
