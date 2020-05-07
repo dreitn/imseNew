@@ -99,7 +99,7 @@ class DatabaseHelper
 
    public function insertIntoCostumer($conn, $email, $phone, $name, $surname, $location)
    {
-       $sql = "INSERT INTO Costumer (EMAIL, PHONE_NUMBER, FIRSTNAME, SURNAME, LOCATIONID) VALUES ('{$email}', '{$phone}', '{$name}','{$surname}', '{$location}')";
+       $sql = "INSERT INTO COSTUMER (EMAIL, PHONE_NUMBER, FIRSTNAME, SURNAME, LOCATIONID) VALUES ('{$email}', '{$phone}', '{$name}','{$surname}', '{$location}')";
 
        if (mysqli_query($conn, $sql)) {
            echo "Insert successfully!";
