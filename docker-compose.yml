@@ -8,7 +8,7 @@ services:
         volumes:
          - ./java:/java
         working_dir: /java
-        command: java -version       
+        command: java -jar IMSE_DBFilling.jar
     
     web:
         image: php:7.2.2-apache
@@ -34,6 +34,6 @@ services:
             MYSQL_PASSWORD: user
             MYSQL_ROOT_PASSWORD: user
             MYSQL_DATABASE: db
-        ports:
-        - "3306:3306"
+        #ports:
+        #- "3306:3306"
 
