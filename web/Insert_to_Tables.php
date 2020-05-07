@@ -22,6 +22,8 @@ $conn = $database->connect();
 <body>
   <style>
 </style>
+  <br>
+  <h1>MAIN USE CASE: CREATE NEW RENT</h1>
   <div>
     <form id='searchform' action='Insert_to_Tables.php' method='get'>
        <p style = "margin-left: 15px;">
@@ -33,20 +35,17 @@ $conn = $database->connect();
            <a href="rent.php">All Rents</a>  |
            <a href='Insert_to_Tables.php'>Insert to Tables</a>
      </p>
-      <p style = "display:none">
-      <input id="email" name="email" type="text" value="<?php echo $_GET['email'];?>"/>
-      </p>
     </form>
   </div>
 <div>
-  <form id='insertform' action='Insert_to_Tables.php' method='get'>
+  <form action='Insert_to_Tables.php' method='POST'>
     <p style = "margin-left: 15px;">
     <strong>Insert a new Customer to Database:</strong>
     <p style = "margin-left: 30px;">
   <table style='border: none'>
     <thead>
       <tr>
-        <th>Email Adress</th>
+        <th>Email Address</th>
         <th>Phone Number</th>
         <th>First Name</th>
         <th>Last Name</th>
@@ -57,33 +56,33 @@ $conn = $database->connect();
        <tr>
         <td>
           <p style = "margin-right: 10px;">
-             <input id='email' name='email' type='text' value='<?php echo $_GET['EMAIL']; ?>' />
+             <input id='email' name='email' type='text', name />
               </p>
                 </td>
           <td>
             <p style = "margin-right: 10px;">
-             <input id='phone' name='phone' type='text' size='20' value='<?php echo $_GET['PHONE_NUMBER']; ?>' />
+             <input id='phone' name='phone' type='text' size='20' />
            </p>
                 </td>
                 <td>
                   <p style = "margin-right: 10px;">
-                   <input id='fname' name='fname' type='text' size='20' value='<?php echo $_GET['FIRSTNAME']; ?>' />
+                   <input id='fname' name='fname' type='text' size='20' />
                  </p>
                 </td>
                 <td>
                   <p style = "margin-right: 10px;">
-                   <input id='lname' name='lname' type='text' size='20' value='<?php echo $_GET['SURNAME']; ?>' />
+                   <input id='lname' name='lname' type='text' size='20' />
                  </p>
                 </td>
                 <td>
                   <p style = "margin-right: 10px;">
-                   <input id='locid' name='locid' type=int value='<?php echo $_GET['LOCATIONID']; ?>' />
+                   <input id='locid' name='locid' type=int  />
                  </p>
                 </td>
         </tr>
            </tbody>
         </table>
-        <input id='submit' type='submit' value='Insert' />
+        <input id='submit' type='Submit' value='Insert'>
       </p>
       </p>
   </form>
@@ -93,9 +92,49 @@ $conn = $database->connect();
 <?php
   //inserting
 
-  if (isset($_GET['EMAIL']))
+  if (isset($_POST['Insert']))
   {
-      $sql = $database->insertIntoCostumer($conn, $_GET['email'], $_GET['firstname'], $_GET['lastname'], $_GET['locid']);
+      echo "NOW INSERTINGGGG!!";
+
+      $email = '';
+      if (isset($_POST['EMAIL'])) {
+          $email = $_POST['EMAIL'];
+      }
+
+      $phone = '';
+      if (isset($_POST['PHONE_NUMBER'])) {
+          $phone = $_POST['PHONE_NUMBER'];
+      }
+
+      $fname = '';
+      if (isset($_POST['FIRSTNAME'])) {
+          $fname = $_POST['FIRSTNAME'];
+      }
+
+      $surname = '';
+      if (isset($_POST['SURNAME'])) {
+          $surname = $_POST['SURNAME'];
+      }
+
+      $locid = '';
+      if (isset($_POST['LOCATIONID'])) {
+          $locid = $_POST['LOCATIONID'];
+      }
+
+
+      $sql = mysqli_prepare($conn, "INSERT INTO COSTUMER (EMAIL, PHONE_NUMBER, FIRSTNAME, SURNAME, LOCATIONID) VALUES ('$email', '$phone', '$fname', '$surname', '$locid')");
+      if($sql !== FALSE) {
+          mysqli_stmt_bind_param($sql, "ss", $email, $phone, $fname, $surname, $locid);
+          if (mysqli_stmt_execute($sql)) {
+              echo "New record created successfully";
+          } else {
+              echo mysqli_stmt_error($sql);
+          }
+      }
+      else{
+          echo mysqli_error($conn);
+      }
+
   }
 ?>
   <div>
@@ -116,12 +155,12 @@ $conn = $database->connect();
                   <tr>
                       <td>
           <p style = "margin-right: 10px;">
-              <input id='resnr' name='resnr' type='text' size='10' value='<?php echo $_GET['RESERVATION_NUMBER']; ?>' />
+              <input id='resnr' name='resnr' type='text' size='10' value='<?php echo $_POST['RESERVATION_NUMBER']; ?>' />
           </p>
           </td>
           <td>
               <p style = "margin-right: 10px;">
-                  <input id='from' name='from' type='text' size='20' value='<?php echo $_GET['FROM_DATE']; ?>' />
+                  <input id='from' name='from' type='text' size='20' value='<?php echo $_POST['FROM_DATE']; ?>' />
               </p>
           </td>
           <td>
@@ -170,22 +209,22 @@ $conn = $database->connect();
                   <tr>
                       <td>
           <p style = "margin-right: 10px;">
-              <input id='regnr' name='regnr' type=number size='10' value='<?php echo $_GET['REGISTRATION_NUMBER']; ?>' />
+              <input id='regnr' name='regnr' type=number size='10' value='<?php echo $_POST['REGISTRATION_NUMBER']; ?>' />
           </p>
           </td>
           <td>
               <p style = "margin-right: 10px;">
-                  <input id='model' name='model' type='text' size='20' value='<?php echo $_GET['CAR_MODEL']; ?>' />
+                  <input id='model' name='model' type='text' size='20' value='<?php echo $_POST['CAR_MODEL']; ?>' />
               </p>
           </td>
           <td>
               <p style = "margin-right: 10px;">
-                  <input id='year' name='year' type=number size='20' value='<?php echo $_GET['MODEL_YEAR']; ?>' />
+                  <input id='year' name='year' type=number size='20' value='<?php echo $_POST['MODEL_YEAR']; ?>' />
               </p>
           </td>
           <td>
               <p style = "margin-right: 10px;">
-                  <input id='price' name='price' type=number size='20' value='<?php echo $_GET['DAILY_PRICE']; ?>' />
+                  <input id='price' name='price' type=number size='20' value='<?php echo $_POST['DAILY_PRICE']; ?>' />
               </p>
           </td>
           </tr>
@@ -200,10 +239,44 @@ $conn = $database->connect();
 
   <?php
   //insert
-  if (isset($_GET['REGISTRATION_NUMBER']))
-  {
-      $sql = $database->insertIntoCAR($conn, $_GET['REGISTRATION_NUMBER'], $_GET['CAR_MODEL'], $_GET['MODEL_YEAR'], $_GET['DAILY_PRICE']);
+
+  $regnr = '';
+  if (isset($_POST['REGISTRATION_NUMBER'])) {
+      $regnr = $_POST['REGISTRATION_NUMBER'];
   }
+
+  $model = '';
+  if (isset($_POST['CAR_MODEL'])) {
+      $model = $_POST['CAR_MODEL'];
+  }
+
+  $year = '';
+  if (isset($_POST['MODEL_YEAR'])) {
+      $year = $_POST['MODEL_YEAR'];
+  }
+
+  $price = '';
+  if (isset($_POST['DAILY_PRICE'])) {
+      $price = $_POST['DAILY_PRICE'];
+  }
+
+  if (isset($_POST['Insert'])){
+      echo "INSETING CAR";
+      $sql = mysqli_prepare($conn, "INSERT INTO CAR (registration_number, car_model, model_year, daily_price) VALUES ('{$regnr}', '{$model}','{$year}','{$price}')");
+      if($sql !== FALSE) {
+          mysqli_stmt_bind_param($sql, "ss", $regnr, $model, $year, $price);
+          if (mysqli_stmt_execute($sql)) {
+              echo "New record created successfully";
+          } else {
+              echo mysqli_stmt_error($sql);
+          }
+      }
+      else{
+          echo mysqli_error($conn);
+      }
+
+  }
+
   ?>
 
   <div>

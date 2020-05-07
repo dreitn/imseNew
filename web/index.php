@@ -6,10 +6,6 @@ require_once('DatabaseHelper.php');
 $database = new DatabaseHelper();
 $conn = $database->connect();
 
-
-
-
-
 $locationid = '';
 if (isset($_GET['locationid'])) {
     $sql = "SELECT LOCATION_ID FROM LOCATIONS". $_GET['LOCATION_ID'];

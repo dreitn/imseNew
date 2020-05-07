@@ -52,6 +52,8 @@ $costumer_array = $database->selectAllCostumers($conn, $email, $phone, $fname, $
 <body>
 <style>
 </style>
+<br>
+<h1>REPORT USE CASE: SEARCHING EACH ENTITY IN THE DATABASE</h1>
 <div>
     <form id='searchform' action='customers.php' method='get'>
         <p style = "margin-left: 15px;">

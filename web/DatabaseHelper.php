@@ -9,15 +9,13 @@ class DatabaseHelper
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         } else {
-            echo "Connected successfully";
+
         }
         return $conn;
     }
 
     public function selectAllCostumers($conn, $email, $phone, $fname, $lname, $locid)
     {
-        echo "<br> email: $email --- <br>";
-
         $sql = "SELECT * FROM COSTUMER
             WHERE EMAIL LIKE '%{$email}%'
             and PHONE_NUMBER LIKE '%{$phone}'
@@ -149,11 +147,12 @@ class DatabaseHelper
     {
         $sql = "INSERT INTO RENT (rent_email, rent_car, rent_reservation) VALUES ('{$RENT_EMAIL}', '{$RENT_CAR}','{$RENT_RESERVATION}')";
 
-        if (mysqli_query($conn, $sql)) {
+        if ($conn->query($sql) === TRUE) {
             echo "Insert successfully!";
         } else {
             echo "Error: " . $sql . "<br>" . mysqli_error($conn);
         }
+
     }
 
 

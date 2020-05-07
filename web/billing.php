@@ -51,6 +51,8 @@ $costumer_array = $database->selectAllBill($conn, $billnr, $total, $date, $c_mai
 <body>
 <style>
 </style>
+<br>
+<h1>USE CASE 1: SEARCH A SPECIFIC BILL AND SEE THE DETAILS </h1>
 <div>
     <form id='searchform' action='billing.php' method='get'>
         <p style = "margin-left: 15px;">

@@ -43,6 +43,8 @@ $rent_array = $database->selectAllRents($conn, $email, $car, $res);
 <body>
 <style>
 </style>
+<br>
+<h1>USE CASE 2: FIND THE DETAILS OF ALL RENTS</h1>
 <div>
     <form id='searchform' action='rent.php' method='get'>
         <p style = "margin-left: 15px;">
