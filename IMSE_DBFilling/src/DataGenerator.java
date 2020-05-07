@@ -34,7 +34,6 @@ public class DataGenerator {
 
 
 
-
         while (count_costumer < 400) {
             String email = rdm.getRandomEmail();
             int phone = rdm.getRandomInteger(100000000, 999999999);
@@ -50,10 +49,6 @@ public class DataGenerator {
 
        ArrayList<String> email = dbHelper.selectCostumerEmail();
        System.out.println("There are " + email.size() + " costumers in our database!");
-
-     
-        ArrayList<Integer> registrationNumber = dbHelper.selectRegistrationNumber();
-        System.out.println("There are " + registrationNumber.size() + " cars in our database!");
 
         while (count_car < 200) {
             int regnr = count_car+1;
@@ -104,7 +99,7 @@ public class DataGenerator {
             }
         }
 
-        while (count_friendship < 200){
+        while (count_friendship < 20){
             String c_email_1 = rdm.getRandomEmail();
             String c_email_2 = rdm.getRandomEmail();
             if(!(c_email_1.equals(c_email_2))){
@@ -114,14 +109,18 @@ public class DataGenerator {
             }
         }
 
-        while (count_rent < registrationNumber.size()) {
-            int regnr = registrationNumber.get(count_rent);
+        ArrayList<Integer> registrationNumber = dbHelper.selectRegistrationNumber();
+        System.out.println("There are " + registrationNumber.size() + " cars in our database!");
+
+        while (count_rent < 50) {
+            int regnr = (rdm.getRandomInteger(1,150));
             String rent_email = rdm.getRandomEmail();
             int rent_reservation = count_rent+1;
             if(dbHelper.insertIntoRent(rent_email, regnr, rent_reservation)){
                 count_rent++;
             }
         }
+
 
         ArrayList<String> rent = dbHelper.selectRENTSize();
         System.out.println("There are " + rent.size() + " car rented!");

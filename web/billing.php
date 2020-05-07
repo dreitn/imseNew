@@ -3,22 +3,10 @@
 // Include DatabaseHelper.php file
 require_once('DatabaseHelper.php');
 
-const username = "user";
-const password = "user";
-const hostname = 'mariadb';
-const db = "db";
-
-$conn = mysqli_connect(hostname, password, username, db);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} else {
-    echo "Connected successfully";
-}
-
 // Instantiate DatabaseHelper class
 $database = new DatabaseHelper();
 
+$conn = $database->connect();
 
 if (isset($_GET['billnr'])) {
     $sql = "SELECT BILL_NUMBER FROM BILLING". $_GET['billnr'];
@@ -66,12 +54,13 @@ $costumer_array = $database->selectAllBill($conn, $billnr, $total, $date, $c_mai
 <div>
     <form id='searchform' action='billing.php' method='get'>
         <p style = "margin-left: 15px;">
-            <a href='index.php'>All Locations</a> ---
-            <a href='billing.php'>All Bills</a>---
-            <a href='costumers.php'>All Customers</a>---
-            <a href='car.php'>All Cars</a>---
-            <a href="reservations.php">All Reservations</a>---
-            <a href='Insert_to_Tables.php'>Insert to Tables</a>---
+            <a href='index.php'>All Locations</a>  |
+            <a href='billing.php'>All Bills</a>  |
+            <a href='costumers.php'>All Customers</a>  |
+            <a href='car.php'>All Cars</a>  |
+            <a href="reservations.php">All Reservations</a>  |
+            <a href="rent.php">All Rents</a>  |
+            <a href='Insert_to_Tables.php'>Insert to Tables</a>
         </p>
         <p style = "display:none">
             <input id='bill' name='bill' type=int value='<?php echo $_GET['billnr']; ?>' />

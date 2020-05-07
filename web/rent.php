@@ -5,42 +5,30 @@ require_once('DatabaseHelper.php');
 
 // Instantiate DatabaseHelper class
 $database = new DatabaseHelper();
+
 $conn = $database->connect();
 
-if (isset($_GET['resnr'])) {
-    $sql = "SELECT RESERVATION_NUMBER FROM RESERVATION". $_GET['resnr'];
+$email = '';
+if (isset($_GET['RENT_EMAIL'])) {
+    $sql = "SELECT RENT_EMAIL FROM RENT". $_GET['RENT_EMAIL'];
 }
 else {
-    $sql = "SELECT * FROM RESERVATION".$_GET['resnr'];
+    $sql = "SELECT * FROM RENT".$_GET['RENT_EMAIL'];
 }
 
-$resnr = '';
-if (isset($_GET['RESERVATION_NUMBER'])) {
-    $resnr = $_GET['RESERVATION_NUMBER'];
+$car = '';
+if (isset($_GET['RENT_CAR'])) {
+    $car = $_GET['RENT_CAR'];
 }
 
-$from = '';
-if (isset($_GET['FROM_DATE'])) {
-    $from = $_GET['FROM_DATE'];
+$res = '';
+if (isset($_GET['RENT_RESERVATION'])) {
+    $res = $_GET['RENT_RESERVATION'];
 }
 
-$return = '';
-if (isset($_GET['RETURN_DATE'])) {
-    $date = $_GET['RETURN_DATE'];
-}
-
-$amount = '';
-if (isset($_GET['AMOUNT'])) {
-    $amount  = $_GET['AMOUNT'];
-}
-
-$bill = '';
-if (isset($_GET['RESERVATION_BILL_NUMBER'])) {
-    $bill  = $_GET['RESERVATION_BILL_NUMBER'];
-}
 
 //Fetch data from database
-$reservation_array = $database->selectAllReservations($conn, $resnr, $from, $return, $amount, $bill);
+$rent_array = $database->selectAllRents($conn, $email, $car, $res);
 
 ?>
 
@@ -56,7 +44,7 @@ $reservation_array = $database->selectAllReservations($conn, $resnr, $from, $ret
 <style>
 </style>
 <div>
-    <form id='searchform' action='reservations.php' method='get'>
+    <form id='searchform' action='rent.php' method='get'>
         <p style = "margin-left: 15px;">
             <a href='index.php'>All Locations</a>  |
             <a href='billing.php'>All Bills</a>  |
@@ -67,7 +55,9 @@ $reservation_array = $database->selectAllReservations($conn, $resnr, $from, $ret
             <a href='Insert_to_Tables.php'>Insert to Tables</a>
         </p>
         <p style = "display:none">
-            <input id='resnr' name='resnr' type=int value='<?php echo $_GET['resnr']; ?>' />
+            <input id='email' name='email' type=String value='<?php echo $_GET['RENT_EMAIL']; ?>' />
+            <input id='car' name='car' type=String value='<?php echo $_GET['RENT_CAR']; ?>' />
+            <input id='res' name='res' type=String value='<?php echo $_GET['RENT_RESERVATION']; ?>' />
         </p>
     </form>
 </div>
@@ -75,7 +65,10 @@ $reservation_array = $database->selectAllReservations($conn, $resnr, $from, $ret
 // check if search view of list view
 
 if (isset($_GET['search'])) {
-    $sql = "SELECT * FROM RESERVATION WHERE RESERVATION_NUMBER =  '" . $_GET['search'] . "'";
+    $sql = "SELECT * FROM RENT WHERE RENT_EMAIL =  '" . $_GET['search'] . "'";
+}
+else{
+    $sql = "SELECT * FROM RENT JOIN CAR C2 on RENT.RENT_CAR = C2.REGISTRATION_NUMBER";
 }
 
 // execute sql statement
@@ -84,10 +77,9 @@ $stmt = mysqli_query($conn,$sql);
 <table class="table table-bordered table-hovered dt-responsive nowrap" id="myTable" >
     <thead>
     <tr>
+        <th>Email of Costumer</th>
+        <th>Rented Car Id</th>
         <th>Reservation Number</th>
-        <th>From Date</th>
-        <th>Return Date</th>
-        <th>Amount</th>
     </tr>
     </thead>
     <tbody>
@@ -95,10 +87,9 @@ $stmt = mysqli_query($conn,$sql);
     // fetch rows of the executed sql query
     while ($row = mysqli_fetch_array($stmt)) {
         echo "<tr>";
-        echo "<td>" . $row['RESERVATION_NUMBER'] . "</td>";
-        echo "<td>" . $row['FROM_DATE'] . "</td>";
-        echo "<td>" . $row['RETURN_DATE'] . "</td>";
-        echo "<td>" . $row['AMOUNT'] . "</td>";
+        echo "<td>" . $row['RENT_EMAIL'] . "</td>";
+        echo "<td>" . $row['RENT_CAR'] . "</td>";
+        echo "<td>" . $row['RENT_RESERVATION'] . "</td>";
         echo "</tr>";
     }
     ?>
@@ -177,6 +168,7 @@ mysqli_close($conn);
 
 </body>
 </html>
+
 
 
 

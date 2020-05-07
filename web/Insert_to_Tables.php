@@ -2,69 +2,11 @@
 // Include DatabaseHelper.php file
 require_once('DatabaseHelper.php');
 
-const username = "user";
-const password = "user";
-const hostname = 'mariadb';
-const db = "db";
-
-$conn = mysqli_connect(hostname, password, username, db);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} else {
-    echo "Connected successfully";
-}
 
 // Instantiate DatabaseHelper class
 $database = new DatabaseHelper();
 
-
-$email = '';
-if (isset($_POST['email'])) {
-    $email = $_POST['email'];
-}
-
-$phone = '';
-if (isset($_POST['phone_number'])) {
-    $phone = $_POST['phone_number'];
-}
-
-$fname = '';
-if (isset($_POST['firstname'])) {
-    $fname = $_POST['firstname'];
-}
-
-$surname = '';
-if (isset($_POST['surname'])) {
-    $surname = $_POST['surname'];
-}
-
-$locid = '';
-if (isset($_POST['locationid'])) {
-    $locid = $_POST['locationid'];
-}
-
-
-$billnr = '';
-if (isset($_POST['billnr'])) {
-    $billnr = $_POST['billnr'];
-}
-
-$total = '';
-if (isset($_POST['total'])) {
-    $total = $_POST['total'];
-}
-
-$date = '';
-if (isset($_POST['date '])) {
-    $date = $_POST['date '];
-}
-
-$c_mail = '';
-if (isset($_POST['c_mail '])) {
-    $c_mail  = $_POST['c_mail '];
-}
-
+$conn = $database->connect();
 
 ?>
 
@@ -83,14 +25,16 @@ if (isset($_POST['c_mail '])) {
   <div>
     <form id='searchform' action='Insert_to_Tables.php' method='get'>
        <p style = "margin-left: 15px;">
-           <a href='index.php'>All Locations</a> ---
-           <a href='billing.php'>All Bills</a>---
-           <a href='costumers.php'>All Customers</a>---
-           <a href='car.php'>All Cars</a>---
-           <a href="reservations.php">All Reservations</a>---
-           <a href='Insert_to_Tables.php'>Insert to Tables</a>---
+           <a href='index.php'>All Locations</a>  |
+           <a href='billing.php'>All Bills</a>  |
+           <a href='costumers.php'>All Customers</a>  |
+           <a href='car.php'>All Cars</a>  |
+           <a href="reservations.php">All Reservations</a>  |
+           <a href="rent.php">All Rents</a>  |
+           <a href='Insert_to_Tables.php'>Insert to Tables</a>
      </p>
       <p style = "display:none">
+      <input id="email" name="email" type="text" value="<?php echo $_GET['email'];?>"/>
       </p>
     </form>
   </div>
@@ -133,7 +77,7 @@ if (isset($_POST['c_mail '])) {
                 </td>
                 <td>
                   <p style = "margin-right: 10px;">
-                   <input id='loc' name='loc' type=int value='<?php echo $_GET['LOCATIONID']; ?>' />
+                   <input id='locid' name='locid' type=int value='<?php echo $_GET['LOCATIONID']; ?>' />
                  </p>
                 </td>
         </tr>
@@ -147,17 +91,169 @@ if (isset($_POST['c_mail '])) {
 
 
 <?php
-  //Handle insert
-
+  //inserting
 
   if (isset($_GET['EMAIL']))
   {
-      //Handle insert
-      if (isset($_GET['EMAIL'])) {
-          $sql = $database->insertIntoCostumer($conn, $email, $phone, $fname, $surname, $locid);
-  }
+      $sql = $database->insertIntoCostumer($conn, $_GET['email'], $_GET['firstname'], $_GET['lastname'], $_GET['locid']);
   }
 ?>
+  <div>
+      <form id='insertform2' action='Insert_to_Tables.php' method='get'>
+          <p style = "margin-left: 15px;margin-top: 50px;">
+              <strong>Insert a new Reservation</strong>
+          <p style = "margin-left: 30px;">
+              <table style='border: none'>
+                  <thead>
+                  <tr>
+                      <th>Reservation number</th>
+                      <th>From Date</th>
+                      <th>Return Date</th>
+                      <th>Amount</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                      <td>
+          <p style = "margin-right: 10px;">
+              <input id='resnr' name='resnr' type='text' size='10' value='<?php echo $_GET['RESERVATION_NUMBER']; ?>' />
+          </p>
+          </td>
+          <td>
+              <p style = "margin-right: 10px;">
+                  <input id='from' name='from' type='text' size='20' value='<?php echo $_GET['FROM_DATE']; ?>' />
+              </p>
+          </td>
+          <td>
+              <p style = "margin-right: 10px;">
+                  <input id='return' name='return' type='text' size='20' value='<?php echo $_GET['RETURN_DATE']; ?>' />
+              </p>
+          </td>
+          <td>
+              <p style = "margin-right: 10px;">
+                  <input id='amount' name='amount' type='text' size='20' value='<?php echo $_GET['AMOUNT']; ?>' />
+              </p>
+          </td>
+          </tr>
+          </tbody>
+          </table>
+          <input id='submit2' type='submit' value='Insert' />
+          </p>
+          </p>
+      </form>
+  </div>
+
+
+  <?php
+  //insert
+  if (isset($_GET['RESERVATION_NUMBER']))
+  {
+      $sql = $database->insertIntoReservation($conn, $_GET['RESERVATION_NUMBER'], $_GET['FROM_DATE'], $_GET['RETURN_DATE'], $_GET['AMOUNT']);
+  }
+  ?>
+
+  <div>
+      <form id='insertform3' action='Insert_to_Tables.php' method='get'>
+          <p style = "margin-left: 15px;margin-top: 50px;">
+              <strong>Insert a new Car</strong>
+          <p style = "margin-left: 30px;">
+              <table style='border: none'>
+                  <thead>
+                  <tr>
+                      <th>Registration number</th>
+                      <th>Model</th>
+                      <th>Year</th>
+                      <th>Price per Day</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                      <td>
+          <p style = "margin-right: 10px;">
+              <input id='regnr' name='regnr' type=number size='10' value='<?php echo $_GET['REGISTRATION_NUMBER']; ?>' />
+          </p>
+          </td>
+          <td>
+              <p style = "margin-right: 10px;">
+                  <input id='model' name='model' type='text' size='20' value='<?php echo $_GET['CAR_MODEL']; ?>' />
+              </p>
+          </td>
+          <td>
+              <p style = "margin-right: 10px;">
+                  <input id='year' name='year' type=number size='20' value='<?php echo $_GET['MODEL_YEAR']; ?>' />
+              </p>
+          </td>
+          <td>
+              <p style = "margin-right: 10px;">
+                  <input id='price' name='price' type=number size='20' value='<?php echo $_GET['DAILY_PRICE']; ?>' />
+              </p>
+          </td>
+          </tr>
+          </tbody>
+          </table>
+          <input id='submit3' type='submit' value='Insert' />
+          </p>
+          </p>
+      </form>
+  </div>
+
+
+  <?php
+  //insert
+  if (isset($_GET['REGISTRATION_NUMBER']))
+  {
+      $sql = $database->insertIntoCAR($conn, $_GET['REGISTRATION_NUMBER'], $_GET['CAR_MODEL'], $_GET['MODEL_YEAR'], $_GET['DAILY_PRICE']);
+  }
+  ?>
+
+  <div>
+      <form id='insertform4' action='Insert_to_Tables.php' method='get'>
+          <p style = "margin-left: 15px;margin-top: 50px;">
+              <strong>Make a new Rent</strong>
+          <p style = "margin-left: 30px;">
+              <table style='border: none'>
+                  <thead>
+                  <tr>
+                      <th>Email of Costumer</th>
+                      <th>Car number</th>
+                      <th>Reservation number</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                      <td>
+          <p style = "margin-right: 10px;">
+              <input id='remail' name='remail' type='text' size='10' value='<?php echo $_GET['RENT_EMAIL']; ?>' />
+          </p>
+          </td>
+          <td>
+              <p style = "margin-right: 10px;">
+                  <input id='rcar' name='rcar' type='text' size='20' value='<?php echo $_GET['RENT_CAR']; ?>' />
+              </p>
+          </td>
+          <td>
+              <p style = "margin-right: 10px;">
+                  <input id='rres' name='rres' type='text' size='20' value='<?php echo $_GET['RENT_RESERVATION']; ?>' />
+              </p>
+          </td>
+          </tr>
+          </tbody>
+          </table>
+          <input id='submit4' type='submit' value='Insert' />
+          </p>
+          </p>
+      </form>
+  </div>
+
+
+  <?php
+  //insert
+  if (isset($_GET['RENT_RESERVATION']))
+  {
+      $sql = $database->insertIntoRent($conn, $_GET['RENT_EMAIL'], $_GET['RENT_CAR'], $_GET['RENT_RESERVATION']);
+  }
+  ?>
+
 <script type="text/javascript">
                 $(document).ready(function() {
                 $('#myTable').DataTable();

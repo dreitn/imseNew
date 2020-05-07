@@ -2,22 +2,11 @@
 
 // Include DatabaseHelper.php file
 require_once('DatabaseHelper.php');
-
-const username = "user";
-const password = "user";
-const hostname = 'mariadb';
-const db = "db";
-
-$conn = mysqli_connect(hostname, password, username, db);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} else {
-    echo "Connected successfully";
-}
-
 // Instantiate DatabaseHelper class
 $database = new DatabaseHelper();
+$conn = $database->connect();
+
+
 
 
 
@@ -70,12 +59,13 @@ $loc_array = $database->selectAllLocations($conn, $locationid, $zip_code, $stree
 <div>
     <form id='searchform' action='index.php' method='get'>
         <p style = "margin-left: 15px;">
-            <a href='index.php'>All Locations</a> ---
-            <a href='billing.php'>All Bills</a>---
-            <a href='costumers.php'>All Customers</a>---
-            <a href='car.php'>All Cars</a>---
-            <a href="reservations.php">All Reservations</a>---
-            <a href='Insert_to_Tables.php'>Insert to Tables</a>---
+            <a href='index.php'>All Locations</a>  |
+            <a href='billing.php'>All Bills</a>  |
+            <a href='costumers.php'>All Customers</a>  |
+            <a href='car.php'>All Cars</a>  |
+            <a href="reservations.php">All Reservations</a>  |
+            <a href="rent.php">All Rents</a>  |
+            <a href='Insert_to_Tables.php'>Insert to Tables</a>
         </p>
         <p style = "display:none">
             <input id='location' name='location' type=integer value='<?php echo $_GET['location']; ?>' />
