@@ -56,12 +56,12 @@ $conn = $database->connect();
        <tr>
         <td>
           <p style = "margin-right: 10px;">
-             <input id='email' name='email' type='text', value='email' />
+             <input id='email' name='email' type='text', value='<?php $_GET['email'];?>' />
               </p>
                 </td>
           <td>
             <p style = "margin-right: 10px;">
-             <input id='phone' name='phone' type='number' size='20', value='1234567' />
+             <input id='phone' name='phone' type='number' size='20', value=<?php $_GET['phone']; ?> />
            </p>
                 </td>
                 <td>
@@ -91,7 +91,6 @@ $conn = $database->connect();
 
 <?php
   //inserting
-
 $email = '';
 if (isset($_GET['email'])) {
     $email = $_GET['email'];
@@ -123,7 +122,6 @@ if (isset($_GET['email'])){
 }
 
 
-
 ?>
   <div>
       <form id='insertform2' action='Insert_to_Tables.php' method='get'>
@@ -143,22 +141,22 @@ if (isset($_GET['email'])){
                   <tr>
                       <td>
           <p style = "margin-right: 10px;">
-              <input id='resnr' name='resnr' type='text' size='10' value='<?php echo $_POST['RESERVATION_NUMBER']; ?>' />
+              <input id='resnr' name='resnr' type='text' size='10' value='<?php echo $_GET['resnr']; ?>' />
           </p>
           </td>
           <td>
               <p style = "margin-right: 10px;">
-                  <input id='from' name='from' type='text' size='20' value='<?php echo $_POST['FROM_DATE']; ?>' />
+                  <input id='from' name='from' type='text' size='20' value='<?php echo $_GET['from']; ?>' />
               </p>
           </td>
           <td>
               <p style = "margin-right: 10px;">
-                  <input id='return' name='return' type='text' size='20' value='<?php echo $_GET['RETURN_DATE']; ?>' />
+                  <input id='return' name='return' type='text' size='20' value='<?php echo $_GET['return']; ?>' />
               </p>
           </td>
           <td>
               <p style = "margin-right: 10px;">
-                  <input id='amount' name='amount' type='text' size='20' value='<?php echo $_GET['AMOUNT']; ?>' />
+                  <input id='amount' name='amount' type='text' size='20' value='<?php echo $_GET['amount']; ?>' />
               </p>
           </td>
           </tr>
@@ -173,87 +171,34 @@ if (isset($_GET['email'])){
 
   <?php
   //insert
-  if (isset($_GET['RESERVATION_NUMBER']))
+  $resnr = '';
+  if (isset($_GET['resnr'])) {
+      $resnr = $_GET['resnr'];
+  }
+
+  $from = '';
+  if (isset($_GET['from'])) {
+      $from = $_GET['from'];
+  }
+
+  $return = '';
+  if (isset($_GET['return'])) {
+      $return = $_GET['return'];
+  }
+
+  $amount = '';
+  if (isset($_GET['amount'])) {
+      $amount = $_GET['amount'];
+  }
+
+  if (isset($_GET['resnr']))
   {
-      $sql = $database->insertIntoReservation($conn, $_GET['RESERVATION_NUMBER'], $_GET['FROM_DATE'], $_GET['RETURN_DATE'], $_GET['AMOUNT']);
+      $sql = $database->insertIntoReservation($conn, $resnr, $from, $return, $amount);
   }
   ?>
 
   <div>
       <form id='insertform3' action='Insert_to_Tables.php' method='get'>
-          <p style = "margin-left: 15px;margin-top: 50px;">
-              <strong>Insert a new Car</strong>
-          <p style = "margin-left: 30px;">
-              <table style='border: none'>
-                  <thead>
-                  <tr>
-                      <th>Registration number</th>
-                      <th>Model</th>
-                      <th>Year</th>
-                      <th>Price per Day</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                      <td>
-          <p style = "margin-right: 10px;">
-              <input id='regnr' name='regnr' type=number size='10' value='<?php echo $_POST['REGISTRATION_NUMBER']; ?>' />
-          </p>
-          </td>
-          <td>
-              <p style = "margin-right: 10px;">
-                  <input id='model' name='model' type='text' size='20' value='<?php echo $_POST['CAR_MODEL']; ?>' />
-              </p>
-          </td>
-          <td>
-              <p style = "margin-right: 10px;">
-                  <input id='year' name='year' type=number size='20' value='<?php echo $_POST['MODEL_YEAR']; ?>' />
-              </p>
-          </td>
-          <td>
-              <p style = "margin-right: 10px;">
-                  <input id='price' name='price' type=number size='20' value='<?php echo $_POST['DAILY_PRICE']; ?>' />
-              </p>
-          </td>
-          </tr>
-          </tbody>
-          </table>
-          <input id='submit3' type='submit' value='Insert' />
-          </p>
-          </p>
-      </form>
-  </div>
-
-
-  <?php
-  //insert
-
-  $regnr = '';
-  if (isset($_POST['REGISTRATION_NUMBER'])) {
-      $regnr = $_POST['REGISTRATION_NUMBER'];
-  }
-
-  $model = '';
-  if (isset($_POST['CAR_MODEL'])) {
-      $model = $_POST['CAR_MODEL'];
-  }
-
-  $year = '';
-  if (isset($_POST['MODEL_YEAR'])) {
-      $year = $_POST['MODEL_YEAR'];
-  }
-
-  $price = '';
-  if (isset($_POST['DAILY_PRICE'])) {
-      $price = $_POST['DAILY_PRICE'];
-  }
-
-
-
-  ?>
-
-  <div>
-      <form id='insertform4' action='Insert_to_Tables.php' method='get'>
           <p style = "margin-left: 15px;margin-top: 50px;">
               <strong>Make a new Rent</strong>
           <p style = "margin-left: 30px;">
@@ -269,17 +214,17 @@ if (isset($_GET['email'])){
                   <tr>
                       <td>
           <p style = "margin-right: 10px;">
-              <input id='remail' name='remail' type='text' size='10' value='<?php echo $_GET['RENT_EMAIL']; ?>' />
+              <input id='remail' name='remail' type='text' size='10' value='<?php echo $_GET['remail']; ?>' />
           </p>
           </td>
           <td>
               <p style = "margin-right: 10px;">
-                  <input id='rcar' name='rcar' type='text' size='20' value='<?php echo $_GET['RENT_CAR']; ?>' />
+                  <input id='rcar' name='rcar' type='text' size='20' value='<?php echo $_GET['rcar']; ?>' />
               </p>
           </td>
           <td>
               <p style = "margin-right: 10px;">
-                  <input id='rres' name='rres' type='text' size='20' value='<?php echo $_GET['RENT_RESERVATION']; ?>' />
+                  <input id='rres' name='rres' type='text' size='20' value='<?php echo $_GET['rres']; ?>' />
               </p>
           </td>
           </tr>
@@ -293,10 +238,26 @@ if (isset($_GET['email'])){
 
 
   <?php
+
+  $remail = '';
+  if (isset($_GET['remail'])) {
+      $remail = $_GET['remail'];
+  }
+
+  $rcar = '';
+  if (isset($_GET['rcar'])) {
+      $rcar = $_GET['rcar'];
+  }
+
+  $rres = '';
+  if (isset($_GET['rres'])) {
+      $rres = $_GET['rres'];
+  }
+
   //insert
-  if (isset($_GET['RENT_RESERVATION']))
+  if (isset($_GET['remail']))
   {
-      $sql = $database->insertIntoRent($conn, $_GET['RENT_EMAIL'], $_GET['RENT_CAR'], $_GET['RENT_RESERVATION']);
+      $sql = $database->insertIntoRent($conn,$remail, $rcar, $rres);
   }
   ?>
 
