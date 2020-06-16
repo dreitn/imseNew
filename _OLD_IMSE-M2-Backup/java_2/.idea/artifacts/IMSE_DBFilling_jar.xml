@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="IMSE_DBFilling:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/IMSE_DBFilling_jar</output-path>
+    <root id="archive" name="IMSE_DBFilling.jar">
+      <element id="module-output" name="IMSE_DBFilling" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/mariadb-java-client-2.6.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

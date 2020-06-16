@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+
+    java:
+        container_name: openjdk
+        image: openjdk:alpine
+        volumes:
+         - ./java:/java
+        working_dir: /java
+        command: java -jar IMSE_DBFilling.jar
+    
+    web:
+        image: php:7.2.2-apache
+        container_name: php_web
+        volumes:
+        - ./web:/var/www/html/
+        command: "/bin/sh -c 'docker-php-ext-install mysqli && exec apache2-foreground'"
+        
+        stdin_open: true
+        tty: true
+        ports:
+        - "80:80"
+
+    db:
+        container_name: mariadb
+        image: mariadb
+        volumes:
+            - ./sql_tables.sql://docker-entrypoint-initdb.d/1-sql_tables.sql
+
+        restart: always
+        environment:
+            MYSQL_USER: user
+            MYSQL_PASSWORD: user
+            MYSQL_ROOT_PASSWORD: user
+            MYSQL_DATABASE: db
+        #ports:
+        #- "3306:3306"
+        
+        
+    mongo:
+        image: mongo
+        restart: always
+        environment:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example
+        ports:
+          - 27017:27017
+
+    mongo-express:
+        image: mongo-express
+        restart: always
+        ports:
+          - 8081:8081
+        environment:
+          ME_CONFIG_MONGODB_ADMINUSERNAME: root
+          ME_CONFIG_MONGODB_ADMINPASSWORD: example
+
