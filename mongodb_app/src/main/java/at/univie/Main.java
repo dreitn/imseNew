@@ -6,8 +6,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
-import java.sql.*;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Logger;
 
 public class Main {
@@ -43,17 +45,6 @@ public class Main {
                 String email = rs.getString("EMAIL");
                 String locationId = rs.getString("LOCATIONID");
 
-
-                // rs = mariaDBQueries.querryOnEmailAdress(email, locationID);
-
-                //get all costumers
-                //get all bills of this costumer and save them into an array
-                //find all biling and save as REsultset
-                //create a list of Resultsets
-                //get all locations of costumer and save to an array
-                //get all arefriend relations of the costumer save to an aray
-                //collection.inset
-
                 Document costumerDoc = new Document("EMAIL", rs.getString("EMAIL"))
                         .append("FIRSTNAME", rs.getString("FIRSTNAME"))
                         .append("SURNAME", rs.getString("SURNAME"))
@@ -78,8 +69,12 @@ public class Main {
                     costumerDoc.append("LOCATIONS", locationDoc);
                 }
 
+                ResultSet fs = mariaDBQueries.getAreFriendsByCostumerEmail(email);
+                while (fs.next()) {
+                    Document friendsDoc = new Document("FRIENDS", fs.getString("friend_costumer_email_2"));
 
-                //ResultSet fl = mariaDBQueries.getFriendsBy
+                    costumerDoc.append("FRIENDS", friendsDoc);
+                }
 
                 System.out.println(costumerDoc.toJson());
                 // collectionTest.insertOne(costumerDoc);

@@ -75,13 +75,13 @@ public class MariaDBQueries {
 
     public ResultSet getLocationByLocationID(String locationId) {
 
-        String querry = "Select * from LOCATIONS l where l.LOCATION_ID = '"+ locationId + "';\n";
+        String query = "Select * from LOCATIONS l where l.LOCATION_ID = '"+ locationId + "';\n";
 
         ResultSet locationSelection = null;
 
         try {
             Statement statement = connection.createStatement();
-            locationSelection = statement.executeQuery(querry);
+            locationSelection = statement.executeQuery(query);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,18 +91,18 @@ public class MariaDBQueries {
     }
 
     public ResultSet getAreFriendsByCostumerEmail(String email) {
-        String querry = "Select * from Costumer c where c.C_EMAIL='" + email + "';\n";
+        String query = "Select friend_costumer_email_2 from ARE_FRIENDS a where a.friend_costumer_email_1 ='" + email + "';\n";
 
-        ResultSet billingsSelection = null;
+        ResultSet friendsSelection = null;
 
         try {
             Statement statement = connection.createStatement();
-            billingsSelection = statement.executeQuery(querry);
+            friendsSelection = statement.executeQuery(query);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return billingsSelection;
+        return friendsSelection;
 
     }
 
