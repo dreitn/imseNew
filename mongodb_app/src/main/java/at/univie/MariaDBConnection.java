@@ -2,6 +2,7 @@ package at.univie;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
@@ -37,5 +38,10 @@ public class MariaDBConnection {
 
     public static Connection getCon() {
         return con;
+    }
+
+    public void close() throws SQLException {
+        stmt.close();
+        con.close();
     }
 }

@@ -2,6 +2,7 @@ package at.univie;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
@@ -15,11 +16,6 @@ public class MariaDBQueries {
     public MariaDBQueries(Statement statement, Connection connection) {
         this.connection = connection;
         this.statement = statement;
-
-        createViewsCostumerBillingLocations();
-
-        LOG.info("Views created");
-
     }
 
     public void createViewsCostumerBillingLocations() {
@@ -38,6 +34,7 @@ public class MariaDBQueries {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        LOG.info("Views created");
     }
 
     public ResultSet querryOnEmailAdress(String email, Long locationID) {
@@ -75,13 +72,13 @@ public class MariaDBQueries {
 
     public ResultSet getLocationByLocationID(String locationId) {
 
-        String querry = "Select * from LOCATIONS l where l.LOCATION_ID = '"+ locationId + "';\n";
+        String query = "Select * from LOCATIONS l where l.LOCATION_ID = '"+ locationId + "';\n";
 
         ResultSet locationSelection = null;
 
         try {
             Statement statement = connection.createStatement();
-            locationSelection = statement.executeQuery(querry);
+            locationSelection = statement.executeQuery(query);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,20 +88,58 @@ public class MariaDBQueries {
     }
 
     public ResultSet getAreFriendsByCostumerEmail(String email) {
-        String querry = "Select * from Costumer c where c.C_EMAIL='" + email + "';\n";
+        String query = "Select friend_costumer_email_2 from ARE_FRIENDS a where a.friend_costumer_email_1 ='" + email + "';\n";
 
-        ResultSet billingsSelection = null;
+        ResultSet friendsSelection = null;
 
         try {
             Statement statement = connection.createStatement();
-            billingsSelection = statement.executeQuery(querry);
+            friendsSelection = statement.executeQuery(query);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return billingsSelection;
+        return friendsSelection;
 
     }
+
+    public ResultSet getReservationBill(String reservationBillnumber) {
+        String query = "Select * from BILLING b where b.BILL_NUMBER = '"+ reservationBillnumber + "';\n";
+
+        ResultSet billSelection = null;
+
+        try {
+            Statement statement = connection.createStatement();
+            billSelection = statement.executeQuery(query);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return billSelection;
+    }
+
+
+    public ResultSet getReservationCar(String resevationnumber) {
+
+        String query = "SELECT DISTINCT CAR_MODEL, REGISTRATION_NUMBER, MODEL_YEAR, DAILY_PRICE\n" +
+                "FROM CAR C INNER JOIN RENT R\n" +
+                "on C.REGISTRATION_NUMBER = R.RENT_CAR\n" +
+                "where RENT_RESERVATION = '"+ resevationnumber + "';";
+
+        ResultSet carSelection = null;
+
+        try {
+            Statement statement = connection.createStatement();
+            carSelection = statement.executeQuery(query);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return carSelection;
+
+    }
+
+
 
     public void dropViews() {
 
@@ -120,7 +155,7 @@ public class MariaDBQueries {
             e.printStackTrace();
         }
         LOG.info("Views dropped");
-
-
     }
+
+
 }

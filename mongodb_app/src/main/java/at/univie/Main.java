@@ -6,8 +6,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
-import java.sql.*;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Logger;
 
 public class Main {
@@ -30,29 +32,18 @@ public class Main {
         LOG.info("Collections are set and we can start to migrate!!!");
 
 
-        String costumerQuerry = "SELECT * FROM COSTUMER";
+        String costumerQuery = "SELECT * FROM COSTUMER";
+        String reservationQuery = "SELECT * FROM RESERVATION";
         try {
             Statement st = con.createStatement();
-
-            ResultSet rs = st.executeQuery(costumerQuerry);
-
+            ResultSet rs = st.executeQuery(costumerQuery);
+            ResultSet resQuery = st.executeQuery(reservationQuery);
             MariaDBQueries mariaDBQueries = new MariaDBQueries(st, con);
 
-
+//creating the Costumer collection which includes costumer, bills, locations, friends
             while (rs.next()) {
                 String email = rs.getString("EMAIL");
                 String locationId = rs.getString("LOCATIONID");
-
-
-                // rs = mariaDBQueries.querryOnEmailAdress(email, locationID);
-
-                //get all costumers
-                //get all bills of this costumer and save them into an array
-                //find all biling and save as REsultset
-                //create a list of Resultsets
-                //get all locations of costumer and save to an array
-                //get all arefriend relations of the costumer save to an aray
-                //collection.inset
 
                 Document costumerDoc = new Document("EMAIL", rs.getString("EMAIL"))
                         .append("FIRSTNAME", rs.getString("FIRSTNAME"))
@@ -68,6 +59,7 @@ public class Main {
                             .append("C_EMAIL", bs.getString("C_EMAIL"));
                     costumerDoc.append("BILLING", billingDoc);
                 }
+                bs.close();
 
                 ResultSet ls = mariaDBQueries.getLocationByLocationID(locationId);
                 while (ls.next()) {
@@ -77,22 +69,66 @@ public class Main {
                             .append("CITY", ls.getString("CITY"));
                     costumerDoc.append("LOCATIONS", locationDoc);
                 }
+                ls.close();
 
+                ResultSet fs = mariaDBQueries.getAreFriendsByCostumerEmail(email);
+                while (fs.next()) {
+                    Document friendsDoc = new Document("FRIENDS", fs.getString("friend_costumer_email_2"));
 
-                //ResultSet fl = mariaDBQueries.getFriendsBy
+                    costumerDoc.append("FRIENDS", friendsDoc);
+                }
+                fs.close();
 
-                System.out.println(costumerDoc.toJson());
-                // collectionTest.insertOne(costumerDoc);
+             //   System.out.println(costumerDoc.toJson());
             }
+            LOG.info("Costumer collection has created!");
+//creating Reservation collection which includes insurance, car, bill
+            while(resQuery.next()){
 
-            mariaDBQueries.dropViews();
+                String resevationbillnumber = resQuery.getString("RESERVATION_BILL_NUMBER");
+                String resevationnumber = resQuery.getString("RESERVATION_NUMBER");
 
+                Document reservationDoc = new Document("RESERVATION_NUMBER", resQuery.getString("RESERVATION_NUMBER"))
+                        .append("FROM_DATE", resQuery.getString("FROM_DATE"))
+                        .append("RETURN_DATE", resQuery.getString("RETURN_DATE"))
+                        .append("AMOUNT", resQuery.getString("AMOUNT"));
+
+                ResultSet rb = mariaDBQueries.getReservationBill(resevationbillnumber);
+                while (rb.next()) {
+                    Document ReservationBillingDoc = new Document("BILLING_NUMBER", rb.getString("BILL_NUMBER"))
+                            .append("TOTAL_PRICE", rb.getString("TOTAL_PRICE"))
+                            .append("BILLDATE", rb.getString("BILLDATE"))
+                            .append("C_EMAIL", rb.getString("C_EMAIL"));
+                    reservationDoc.append("BILLING", ReservationBillingDoc);
+                }
+                rb.close();
+
+                ResultSet rc = mariaDBQueries.getReservationCar(resevationnumber);
+                while (rc.next()) {
+                    Document ReservationCarDoc = new Document("REGISTRATION_NUMBER", rc.getString("REGISTRATION_NUMBER"))
+                            .append("CAR_MODEL", rc.getString("CAR_MODEL"))
+                            .append("MODEL_YEAR", rc.getString("MODEL_YEAR"))
+                            .append("DAILY_PRICE", rc.getString("DAILY_PRICE"));
+                    reservationDoc.append("CAR", ReservationCarDoc);
+                }
+                rc.close();
+             //   System.out.println(reservationDoc.toJson());
+            }
+            LOG.info("Reservation collection has created!");
+
+         // mariaDBQueries.dropViews();
+            st.close();
+            rs.close();
+            resQuery.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
-
-
+        try {
+            maria.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
 }
