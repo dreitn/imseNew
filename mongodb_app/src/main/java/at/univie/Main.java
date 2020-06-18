@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class Main {
@@ -51,35 +53,41 @@ public class Main {
                         .append("PHONE_NUMBER", rs.getString("PHONE_NUMBER"))
                         .append("LOCATIONID", rs.getString("LOCATIONID"));
 
+                List<Document> listofbills = new ArrayList<>();
                 ResultSet bs = mariaDBQueries.getEmailByCostumerEmail(email);
                 while (bs.next()) {
                     Document billingDoc = new Document("BILLING_NUMBER", bs.getString("BILL_NUMBER"))
                             .append("TOTAL_PRICE", bs.getString("TOTAL_PRICE"))
                             .append("BILLDATE", bs.getString("BILLDATE"))
                             .append("C_EMAIL", bs.getString("C_EMAIL"));
-                    costumerDoc.append("BILLING", billingDoc);
+                    listofbills.add(billingDoc);
+
                 }
+                costumerDoc.append("BILLING", listofbills);
                 bs.close();
 
                 ResultSet ls = mariaDBQueries.getLocationByLocationID(locationId);
+                List<Document> listofloc = new ArrayList<>();
                 while (ls.next()) {
                     Document locationDoc = new Document("LOCATION_ID", ls.getString("LOCATION_ID"))
                             .append("ZIP_CODE", ls.getString("ZIP_CODE"))
                             .append("STREET", ls.getString("STREET"))
                             .append("CITY", ls.getString("CITY"));
-                    costumerDoc.append("LOCATIONS", locationDoc);
+                    listofloc.add(locationDoc);
                 }
+                costumerDoc.append("LOCATIONS", listofloc);
                 ls.close();
 
                 ResultSet fs = mariaDBQueries.getAreFriendsByCostumerEmail(email);
+                List<Document> listoffriends = new ArrayList<>();
                 while (fs.next()) {
                     Document friendsDoc = new Document("FRIENDS", fs.getString("friend_costumer_email_2"));
-
-                    costumerDoc.append("FRIENDS", friendsDoc);
+                    listoffriends.add(friendsDoc);
                 }
+                costumerDoc.append("FRIENDS", listoffriends);
                 fs.close();
 
-             //   System.out.println(costumerDoc.toJson());
+                System.out.println(costumerDoc.toJson());
             }
             LOG.info("Costumer collection has created!");
 //creating Reservation collection which includes insurance, car, bill
@@ -94,25 +102,29 @@ public class Main {
                         .append("AMOUNT", resQuery.getString("AMOUNT"));
 
                 ResultSet rb = mariaDBQueries.getReservationBill(resevationbillnumber);
+                List<Document> reslistofbills = new ArrayList<>();
                 while (rb.next()) {
                     Document ReservationBillingDoc = new Document("BILLING_NUMBER", rb.getString("BILL_NUMBER"))
                             .append("TOTAL_PRICE", rb.getString("TOTAL_PRICE"))
                             .append("BILLDATE", rb.getString("BILLDATE"))
                             .append("C_EMAIL", rb.getString("C_EMAIL"));
-                    reservationDoc.append("BILLING", ReservationBillingDoc);
+                    reslistofbills.add(ReservationBillingDoc);
                 }
+                reservationDoc.append("BILLING", reslistofbills);
                 rb.close();
 
                 ResultSet rc = mariaDBQueries.getReservationCar(resevationnumber);
+                List<Document> reslistofcars = new ArrayList<>();
                 while (rc.next()) {
                     Document ReservationCarDoc = new Document("REGISTRATION_NUMBER", rc.getString("REGISTRATION_NUMBER"))
                             .append("CAR_MODEL", rc.getString("CAR_MODEL"))
                             .append("MODEL_YEAR", rc.getString("MODEL_YEAR"))
                             .append("DAILY_PRICE", rc.getString("DAILY_PRICE"));
-                    reservationDoc.append("CAR", ReservationCarDoc);
+                    reslistofcars.add(ReservationCarDoc);
                 }
+                reservationDoc.append("CAR", reslistofcars);
                 rc.close();
-             //   System.out.println(reservationDoc.toJson());
+                System.out.println(reservationDoc.toJson());
             }
             LOG.info("Reservation collection has created!");
 
