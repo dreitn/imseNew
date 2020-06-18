@@ -59,6 +59,7 @@ public class Main {
                             .append("C_EMAIL", bs.getString("C_EMAIL"));
                     costumerDoc.append("BILLING", billingDoc);
                 }
+                bs.close();
 
                 ResultSet ls = mariaDBQueries.getLocationByLocationID(locationId);
                 while (ls.next()) {
@@ -68,6 +69,7 @@ public class Main {
                             .append("CITY", ls.getString("CITY"));
                     costumerDoc.append("LOCATIONS", locationDoc);
                 }
+                ls.close();
 
                 ResultSet fs = mariaDBQueries.getAreFriendsByCostumerEmail(email);
                 while (fs.next()) {
@@ -75,6 +77,8 @@ public class Main {
 
                     costumerDoc.append("FRIENDS", friendsDoc);
                 }
+                fs.close();
+
              //   System.out.println(costumerDoc.toJson());
             }
             LOG.info("Costumer collection has created!");
@@ -97,6 +101,7 @@ public class Main {
                             .append("C_EMAIL", rb.getString("C_EMAIL"));
                     reservationDoc.append("BILLING", ReservationBillingDoc);
                 }
+                rb.close();
 
                 ResultSet rc = mariaDBQueries.getReservationCar(resevationnumber);
                 while (rc.next()) {
@@ -106,18 +111,24 @@ public class Main {
                             .append("DAILY_PRICE", rc.getString("DAILY_PRICE"));
                     reservationDoc.append("CAR", ReservationCarDoc);
                 }
-                System.out.println(reservationDoc.toJson());
+                rc.close();
+             //   System.out.println(reservationDoc.toJson());
             }
             LOG.info("Reservation collection has created!");
 
-         //   mariaDBQueries.dropViews();
-
+         // mariaDBQueries.dropViews();
+            st.close();
+            rs.close();
+            resQuery.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
-
-
+        try {
+            maria.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
 }
