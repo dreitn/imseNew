@@ -15,11 +15,6 @@ public class MariaDBQueries {
     public MariaDBQueries(Statement statement, Connection connection) {
         this.connection = connection;
         this.statement = statement;
-
-        createViewsCostumerBillingLocations();
-
-        LOG.info("Views created");
-
     }
 
     public void createViewsCostumerBillingLocations() {
@@ -38,6 +33,7 @@ public class MariaDBQueries {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        LOG.info("Views created");
     }
 
     public ResultSet querryOnEmailAdress(String email, Long locationID) {
