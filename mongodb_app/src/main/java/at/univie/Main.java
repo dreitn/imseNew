@@ -32,15 +32,15 @@ public class Main {
         LOG.info("Collections are set and we can start to migrate!!!");
 
 
-        String costumerQuerry = "SELECT * FROM COSTUMER";
+        String costumerQuery = "SELECT * FROM COSTUMER";
+        String reservationQuery = "SELECT * FROM RESERVATION";
         try {
             Statement st = con.createStatement();
-
-            ResultSet rs = st.executeQuery(costumerQuerry);
-
+            ResultSet rs = st.executeQuery(costumerQuery);
+            ResultSet resQuery = st.executeQuery(reservationQuery);
             MariaDBQueries mariaDBQueries = new MariaDBQueries(st, con);
 
-
+//creating the Costumer collection which includes costumer, bills, locations, friends
             while (rs.next()) {
                 String email = rs.getString("EMAIL");
                 String locationId = rs.getString("LOCATIONID");
@@ -75,12 +75,39 @@ public class Main {
 
                     costumerDoc.append("FRIENDS", friendsDoc);
                 }
+                LOG.info("Costumer collection has created!");
+             //   System.out.println(costumerDoc.toJson());
+            }
+//creating Reservation collection which includes insurance, car, bill
+            while(resQuery.next()){
 
-                System.out.println(costumerDoc.toJson());
-                // collectionTest.insertOne(costumerDoc);
+                String resevationbillnumber = resQuery.getString("RESERVATION_BILL_NUMBER");
+                String resevationnumber = resQuery.getString("RESERVATION_NUMBER");
+
+                Document reservationDoc = new Document("RESERVATION_NUMBER", resQuery.getString("RESERVATION_NUMBER"))
+                        .append("FROM_DATE", resQuery.getString("FROM_DATE"))
+                        .append("RETURN_DATE", resQuery.getString("RETURN_DATE"))
+                        .append("AMOUNT", resQuery.getString("AMOUNT"));
+
+                ResultSet rb = mariaDBQueries.getReservationBill(resevationbillnumber);
+                while (rb.next()) {
+                    Document ReservationBillingDoc = new Document("BILLING_NUMBER", rb.getString("BILL_NUMBER"))
+                            .append("TOTAL_PRICE", rb.getString("TOTAL_PRICE"))
+                            .append("BILLDATE", rb.getString("BILLDATE"))
+                            .append("C_EMAIL", rb.getString("C_EMAIL"));
+                    reservationDoc.append("BILLING", ReservationBillingDoc);
+                }
+
+                ResultSet rc = mariaDBQueries.getReservationCar(resevationnumber);
+                while (rc.next()) {
+                    //TODO
+                }
+
+
+                System.out.println(reservationDoc.toJson());
             }
 
-            mariaDBQueries.dropViews();
+         //   mariaDBQueries.dropViews();
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();

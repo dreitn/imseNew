@@ -102,6 +102,43 @@ public class MariaDBQueries {
 
     }
 
+    public ResultSet getReservationBill(String reservationBillnumber) {
+        String query = "Select * from BILLING b where b.BILL_NUMBER = '"+ reservationBillnumber + "';\n";
+
+        ResultSet billSelection = null;
+
+        try {
+            Statement statement = connection.createStatement();
+            billSelection = statement.executeQuery(query);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return billSelection;
+    }
+
+
+    public ResultSet getReservationCar(String resevationnumber) {
+
+        //TODO
+        //String query = "Select REGISTRATION_NUMBER, CAR_MODEL, MODEL_YEAR, DAILY_PRICE from  CAR c, RENT r\n" +
+        //        "where c.REGISTRATION_NUMBER = r.RENT_CAR;";
+
+        ResultSet carSelection = null;
+
+        try {
+            Statement statement = connection.createStatement();
+            carSelection = statement.executeQuery(query);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return carSelection;
+
+    }
+
+
+
     public void dropViews() {
 
         String drop1 = "drop view cosAndLoc;\n";
@@ -116,7 +153,5 @@ public class MariaDBQueries {
             e.printStackTrace();
         }
         LOG.info("Views dropped");
-
-
     }
 }
