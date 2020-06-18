@@ -75,9 +75,9 @@ public class Main {
 
                     costumerDoc.append("FRIENDS", friendsDoc);
                 }
-                LOG.info("Costumer collection has created!");
              //   System.out.println(costumerDoc.toJson());
             }
+            LOG.info("Costumer collection has created!");
 //creating Reservation collection which includes insurance, car, bill
             while(resQuery.next()){
 
@@ -100,12 +100,15 @@ public class Main {
 
                 ResultSet rc = mariaDBQueries.getReservationCar(resevationnumber);
                 while (rc.next()) {
-                    //TODO
+                    Document ReservationCarDoc = new Document("REGISTRATION_NUMBER", rc.getString("REGISTRATION_NUMBER"))
+                            .append("CAR_MODEL", rc.getString("CAR_MODEL"))
+                            .append("MODEL_YEAR", rc.getString("MODEL_YEAR"))
+                            .append("DAILY_PRICE", rc.getString("DAILY_PRICE"));
+                    reservationDoc.append("CAR", ReservationCarDoc);
                 }
-
-
                 System.out.println(reservationDoc.toJson());
             }
+            LOG.info("Reservation collection has created!");
 
          //   mariaDBQueries.dropViews();
 

@@ -120,9 +120,10 @@ public class MariaDBQueries {
 
     public ResultSet getReservationCar(String resevationnumber) {
 
-        //TODO
-        //String query = "Select REGISTRATION_NUMBER, CAR_MODEL, MODEL_YEAR, DAILY_PRICE from  CAR c, RENT r\n" +
-        //        "where c.REGISTRATION_NUMBER = r.RENT_CAR;";
+        String query = "SELECT DISTINCT CAR_MODEL, REGISTRATION_NUMBER, MODEL_YEAR, DAILY_PRICE\n" +
+                "FROM CAR C INNER JOIN RENT R\n" +
+                "on C.REGISTRATION_NUMBER = R.RENT_CAR\n" +
+                "where RENT_RESERVATION = '"+ resevationnumber + "';";
 
         ResultSet carSelection = null;
 
