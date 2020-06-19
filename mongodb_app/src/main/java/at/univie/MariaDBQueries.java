@@ -2,24 +2,20 @@ package at.univie;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
 public class MariaDBQueries {
 
-    private Statement statement;
     private Connection connection;
 
     private static final Logger LOG = Logger.getLogger(MariaDBQueries.class.getName());
 
-    public MariaDBQueries(Statement statement, Connection connection) {
+    public MariaDBQueries(Connection connection) {
         this.connection = connection;
-        this.statement = statement;
     }
 
     public void createViewsCostumerBillingLocations() {
-
         String createBillingView = "create View cosAndBill as\n" +
                 "        select * from COSTUMER C natural join BILLING B where C.EMAIL = B.C_EMAIL";
         String createLocationView = "create View cosAndLoc as\n" +
@@ -71,8 +67,7 @@ public class MariaDBQueries {
     }
 
     public ResultSet getLocationByLocationID(String locationId) {
-
-        String query = "Select * from LOCATIONS l where l.LOCATION_ID = '"+ locationId + "';\n";
+        String query = "Select * from LOCATIONS l where l.LOCATION_ID = '" + locationId + "';\n";
 
         ResultSet locationSelection = null;
 
@@ -84,7 +79,6 @@ public class MariaDBQueries {
             e.printStackTrace();
         }
         return locationSelection;
-
     }
 
     public ResultSet getAreFriendsByCostumerEmail(String email) {
@@ -100,11 +94,10 @@ public class MariaDBQueries {
             e.printStackTrace();
         }
         return friendsSelection;
-
     }
 
     public ResultSet getReservationBill(String reservationBillnumber) {
-        String query = "Select * from BILLING b where b.BILL_NUMBER = '"+ reservationBillnumber + "';\n";
+        String query = "Select * from BILLING b where b.BILL_NUMBER = '" + reservationBillnumber + "';\n";
 
         ResultSet billSelection = null;
 
@@ -118,13 +111,11 @@ public class MariaDBQueries {
         return billSelection;
     }
 
-
     public ResultSet getReservationCar(String resevationnumber) {
-
         String query = "SELECT DISTINCT CAR_MODEL, REGISTRATION_NUMBER, MODEL_YEAR, DAILY_PRICE\n" +
                 "FROM CAR C INNER JOIN RENT R\n" +
                 "on C.REGISTRATION_NUMBER = R.RENT_CAR\n" +
-                "where RENT_RESERVATION = '"+ resevationnumber + "';";
+                "where RENT_RESERVATION = '" + resevationnumber + "';";
 
         ResultSet carSelection = null;
 
@@ -136,26 +127,62 @@ public class MariaDBQueries {
             e.printStackTrace();
         }
         return carSelection;
-
     }
 
-
-
-    public void dropViews() {
-
-        String drop1 = "drop view cosAndLoc;\n";
-        String drop2 = "drop view cosAndBill;\n";
-
+    public ResultSet getAllCostumers() {
+        ResultSet resultSet = null;
         try {
             Statement statement = connection.createStatement();
-            statement.execute(drop1);
-            statement.execute(drop2);
+            resultSet = statement.executeQuery("SELECT * FROM COSTUMER");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+    }
+
+    public ResultSet getAllReservations() {
+        ResultSet resultSet = null;
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM RESERVATION");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+    }
+
+    public ResultSet getAllCars() {
+        ResultSet resultSet = null;
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM CAR");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+    }
+
+    public ResultSet getAllLocations(){
+        ResultSet resultSet = null;
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM LOCATIONS");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+    }
+
+    public void dropViews() {
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("drop view cosAndLoc");
+            statement.execute("drop view cosAndBill");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         LOG.info("Views dropped");
     }
-
-
 }

@@ -2,7 +2,6 @@ package at.univie;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
@@ -10,14 +9,14 @@ import java.util.logging.Logger;
 public class MariaDBConnection {
     private static final Logger LOG = Logger.getLogger(MariaDBConnection.class.getName());
 
-    private static final String DB_CONNECTION_URL = "jdbc:mariadb://localhost:3306/db";
-    private static final String USER = "user";
-    private static final String PASS = "user";
+    private String DB_CONNECTION_URL = "jdbc:mariadb://localhost:3306/db";
+    private String USER = "user";
+    private String PASS = "user";
 
     private static Statement stmt;
     private static Connection con;
 
-    MariaDBConnection() {
+    public MariaDBConnection() {
         try {
             con = DriverManager.getConnection(DB_CONNECTION_URL, USER, PASS);
             stmt = con.createStatement();
@@ -28,20 +27,24 @@ public class MariaDBConnection {
 
     }
 
-    public static String getDbConnectionUrl() {
+    public String getDbConnectionUrl() {
         return DB_CONNECTION_URL;
     }
 
-    public static Statement getStmt() {
+    public Statement getStmt() {
         return stmt;
     }
 
-    public static Connection getCon() {
+    public Connection getCon() {
         return con;
     }
 
-    public void close() throws SQLException {
-        stmt.close();
-        con.close();
+    public void close() {
+        try {
+            stmt.close();
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
