@@ -9,14 +9,13 @@ services:
          - ./java:/java
         working_dir: /java
         command: java -jar IMSE_DBFilling.jar
-    
+
     web:
         image: php:7.2.2-apache
         container_name: php_web
         volumes:
         - ./web:/var/www/html/
-        command: "/bin/sh -c 'docker-php-ext-install mysqli && exec apache2-foreground'"
-        
+        command: "/bin/sh -c 'pecl install mongodb && echo extension=mongodb.so >> /usr/local/etc/php/php.ini && exec apache2-foreground'"
         stdin_open: true
         tty: true
         ports:
@@ -25,6 +24,7 @@ services:
     db:
         container_name: mariadb
         image: mariadb
+
         volumes:
             - ./sql_tables.sql://docker-entrypoint-initdb.d/1-sql_tables.sql
 
